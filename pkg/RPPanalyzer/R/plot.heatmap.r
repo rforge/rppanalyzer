@@ -73,7 +73,7 @@ plot.heatmap <- function(data, distance = "euclidean", dendros="both", cutoff=0.
   lower.quant   <- quantile(data.censored, lower.cutoff)
   upper.quant   <- quantile(data.censored, upper.cutoff)
 
-  print(paste("Discarding ",sum(data.censored < lower.quant), "values below lower ", lower.cutoff*100, "% qunantile and ",sum(data.censored > upper.quant), "values above upper ", upper.cutoff*100, "% quantile",sep=""))
+  print(paste("Discarding ",sum(data.censored < lower.quant), "values below lower ", lower.cutoff*100, "% quantile and ",sum(data.censored > upper.quant), " values above upper ", upper.cutoff*100, "% quantile",sep=""))
   
   data.censored[data.censored < lower.quant] <- lower.quant
   data.censored[data.censored > upper.quant] <- upper.quant
