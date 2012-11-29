@@ -41,10 +41,12 @@ Hu et al., Bioinformatics 2007, Non-parametric quantification of protein lysate 
 
 \author{Stephan Gade <s.gade@dkfz.de> }
 \examples{
-
+\dontrun{
 library(RPPanalyzer)
 data(ser.dil.samples)
+}
 
 \dontrun{predicted.data <- calcSuperCurve(ser.dil.samples, sel=c("measurement"), block.design=c(1,4))}
+
 }
 \keyword{ manip }

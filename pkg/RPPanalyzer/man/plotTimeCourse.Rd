@@ -43,11 +43,12 @@ arrays2rm = c("protein", "Blank"), plotformat = "rawdata",log=TRUE, color=NULL, 
  generates a PDF file}
 \author{Heiko Mannsperger <h.mannsperger@dkfz.de }
 \examples{
+\dontrun{
 	library(RPPanalyzer)
 	data(dataII)
 	plotTimeCourse(dataII,tc.identifier=c("sample","stimulation","stim_concentration","inhibition")
                ,plot.split="experiment",file="output_ptc_x.pdf",plotformat="both")
-
+}
 }
 
 \keyword{hplot }

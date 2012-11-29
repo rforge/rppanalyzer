@@ -20,11 +20,13 @@ simpleBoxplot(x, param, orderGrp=NULL, file = "boxplot_groups.pdf")
 }
 \author{Silvia von der Heyde, Heiko Mannsperger}
 \examples{
+\dontrun{
 	library(RPPanalyzer)
 	
 	data(dataIII)
 	dataIII_median <- sample.median(dataIII)
 	simpleBoxplot(x=dataIII_median, param="rank", orderGrp=c("vx","zx","yzr","rxi"), file="simpleBoxplot.pdf")
+    }
 }
 
 \keyword{ hplot }

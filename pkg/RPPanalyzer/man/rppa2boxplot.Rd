@@ -20,12 +20,13 @@ rppa2boxplot(x, param = "tissue", wilcoxtest = FALSE, control = "normal", file =
 }
 \author{Heiko Mannsperger <h.mannsperger@dkfz.de>}
 \examples{
+\dontrun{
 	library(RPPanalyzer)
 	
 	data(dataIII)
 	dataIII_median <- sample.median(dataIII)
 	rppa2boxplot(dataIII_median,param="rank",control="vx",wilcoxtest=TRUE)
-
+}
 }
 
 \keyword{ hplot }
