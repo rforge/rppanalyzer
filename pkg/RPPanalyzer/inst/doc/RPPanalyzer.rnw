@@ -133,9 +133,9 @@ Provide an identifier for your samples in this column. It is of advantage to kee
 in case of clinical samples, for cell culture experiments put in the name of the cell line and
 add more columns describing every experimental parameter.
 
-\subsubsection{Columns concentration and dilution}
+\subsubsection{Columns concentration, dilution and dilSeriesID}
 
-The column \Rfunarg{concentration} provides numeric data with information of the sample concentration. In case of serially diluted samples describe the dilution steps (starting with a $1$ for the highest concentration) in column \Rfunarg{dilution}.
+The column \Rfunarg{concentration} provides numeric data with information of the sample concentration. In case of serially diluted samples describe the dilution steps (starting with a $1$ for the highest concentration) in column \Rfunarg{dilution}. The column \Rfunarg{dilSeriesID} contains the values that should be used for dilution intercept correction via correctDilinterc(), e.g. cell line names. It should have at least two distinct values which must be matchable in ''control'' and ''measurement''. NA values denote that control values should not be used.
 
 \subsection{Slide description}
 
