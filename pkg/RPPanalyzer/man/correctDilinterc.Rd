@@ -1,5 +1,5 @@
 \name{correctDilinterc}
-\alias{write.Data}
+\alias{}
 \title{
 Dilution series intersect correction
 }

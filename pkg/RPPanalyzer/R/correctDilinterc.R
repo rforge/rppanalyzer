@@ -1,10 +1,6 @@
 ## adapted script for dilution series intersect correction
 ## (based on Daniel Kaschek's version, June 2012)
 
-library(lattice)
-library(gdata)
-library(stats4)
-
 as.my <- function(v) as.numeric(as.character(v))
 
 ## getIntercepts ##
