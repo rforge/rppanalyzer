@@ -10,9 +10,10 @@ Draw a heatmap with column side colors from a RPPA data
 }
 \usage{
    rppaList2Heatmap(x, sampledescription = "sample", side.color = "tissue",
-   remove = c("blank", "protein", "Abmix"), distance = "euclidean",
-   dendros = "both", cutoff = 0.005, fileName = "Heatmap.pdf",
-   cols = colorpanel(100, low = "blue", mid = "yellow", high = "red"))
+   remove = c("blank", "protein", "Abmix"), distance = "eucsq",
+   dendros = "both", cutoff = 0.005, fileName = NULL,
+   cols = colorpanel(100, low = "blue", mid = "yellow", high = "red"),
+   hclust.method="ward")
 }
 \arguments{
   \item{x}{
@@ -38,11 +39,18 @@ Draw a heatmap with column side colors from a RPPA data
       heatmap color distribution
 }
   \item{fileName}{
-		character for the file where the pdf file will be stored
+		character for the file where the pdf file will be stored. If NULL,
+		plot to standard plotting device.
 }
   \item{cols}{
 		color key for the heatmap	
 }
+  \item{hclust.method}{
+	The method to be used for cluster agglomeration. Defaults to \code{ward}.
+	See help of \code{hclust} for options.
+}
+  \item{scale}{
+    String. Either \code{row, column, both or none} for row or column, both or no scaling, respectively.
 
 }
 

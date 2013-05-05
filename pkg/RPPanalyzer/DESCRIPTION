@@ -2,7 +2,7 @@ Package: RPPanalyzer
 Type: Package
 Title: Reads, annotates, and normalizes reverse phase protein array
         data
-Version: 1.0.6
+Version: 1.1
 Date: 2011-08-02
 Author: Heiko Mannsperger with contributions of Stephan Gade
 Maintainer: Christian Bender <christian.bender@tron-mainz.de>

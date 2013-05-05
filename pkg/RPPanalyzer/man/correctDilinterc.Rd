@@ -10,7 +10,7 @@ The second function is used in the last one and does Analysis of Variances for n
 The last one updates the original timeseries signal to (foreground expression - intercept).
 }
 \usage{
-correctedData<-correctDilinterc(dilseries, arraydesc, timeseries, exportNo)
+correctDilinterc(dilseries, arraydesc, timeseries, exportNo)
 }
 \arguments{
   \item{dilseries}{foreground signal matrix as result of write.Data() and import of resulting txt file, but just sample_type "control", i.e. dilution series}
