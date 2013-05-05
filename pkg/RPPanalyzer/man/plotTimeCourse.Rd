@@ -43,7 +43,12 @@ arrays2rm = c("protein", "Blank"), plotformat = "stderr",log=TRUE, color=NULL, x
   One or several column in the sampledescription file should be
   able to indentify the individual experiments described in argument \code{tc.identifier}.
   One column should provide a parameter \code{plot.split} to split the whole data set into different
-  comparable time courses that have to be plotted together.
+  comparable time courses that have to be plotted together.\cr
+  
+  Different plotting options can be specified with the argument \code{plotformat}. Option \code{both} is 
+  most informative, since it shows the original data plus standard deviations
+  at each time point, combined with a spline fit and the standard error
+  of the fit.
 }
 \value{
  generates a PDF file}
@@ -53,7 +58,18 @@ arrays2rm = c("protein", "Blank"), plotformat = "stderr",log=TRUE, color=NULL, x
 	library(RPPanalyzer)
 	data(dataII)
 	plotTimeCourse(dataII,tc.identifier=c("sample","stimulation","stim_concentration","inhibition")
-               ,plot.split="experiment",file="output_ptc_x.pdf",plotformat="both")
+               ,plot.split="experiment",plotformat="stderr")
+    plotTimeCourse(dataII,tc.identifier=c("sample","stimulation","stim_concentration","inhibition")
+               ,plot.split="experiment",plotformat="errbar")
+    plotTimeCourse(dataII,tc.identifier=c("sample","stimulation","stim_concentration","inhibition")
+               ,plot.split="experiment",plotformat="both")
+    plotTimeCourse(dataII,tc.identifier=c("sample","stimulation","stim_concentration","inhibition")
+               ,plot.split="experiment",plotformat="rawdata")
+    plotTimeCourse(dataII,tc.identifier=c("sample","stimulation","stim_concentration","inhibition")
+               ,plot.split="experiment",plotformat="spline")
+    plotTimeCourse(dataII,tc.identifier=c("sample","stimulation","stim_concentration","inhibition")
+               ,plot.split="experiment",plotformat="spline_noconf")
+               
 }
 }
 
