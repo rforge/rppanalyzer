@@ -7,8 +7,8 @@
  }
 \usage{
 plotTimeCourse(x, tc.identifier = c("sample", "stimulation", "inhibition", "stim_concentration"),
-tc.reference=NULL, plot.split = "experiment", file = "splineplot.pdf",
-arrays2rm = c("protein", "Blank"), plotformat = "rawdata",log=TRUE, color=NULL, xlim = NULL, ylim = NULL)
+tc.reference=NULL, plot.split = "experiment", file = NULL,
+arrays2rm = c("protein", "Blank"), plotformat = "stderr",log=TRUE, color=NULL, xlim = NULL, ylim = NULL)
 }
 \arguments{
   \item{x}{ List containing RPPA data set }
@@ -21,9 +21,15 @@ arrays2rm = c("protein", "Blank"), plotformat = "rawdata",log=TRUE, color=NULL, 
   \item{file}{ character string for the name of the exported file }
   \item{arrays2rm}{ character strings identifying the targets that should be
   from the time course plots }
-  \item{plotformat}{ character string defining the plot type: \code{rawdata},
-  \code{spline},\code{both} or \code{spline_noconf}. The latter plots splines without its 
-    confidence bands. }
+  \item{plotformat}{ character string defining the plot type: \code{rawdata} for 
+    plotting the connected medians plus standard deviation of the data, 
+    \code{spline} and \code{both} for plotting the a spline fit through the data
+    or both raw data and spline, as well as a confidence band showing the standard
+    error of the spline fit; \code{spline_noconf} only plots the spline without
+    confidence band. \code{errbar} will show the spline fit plus raw data
+    without connecting the medians by a line, \code{stderr} will show 
+    a less crowded version of the spline plus standard error represented 
+    as simple error bars (which is the default). }
   \item{log}{logical, if true time courses signal intensities will be plotted
   at log2 scale}
   \item{color}{ Vector holding the colors for the samples to be plot. If NULL, colors will be generated. }

@@ -1,5 +1,9 @@
 \name{correctDilinterc}
 \alias{correctDilinterc}
+\alias{analyzeIntercepts}
+\alias{getIntercepts}
+\alias{getSignals}
+\alias{as.my}
 \title{
 Dilution series intersect correction
 }
@@ -10,13 +14,21 @@ The second function is used in the last one and does Analysis of Variances for n
 The last one updates the original timeseries signal to (foreground expression - intercept).
 }
 \usage{
-correctDilinterc(dilseries, arraydesc, timeseries, exportNo)
+	correctDilinterc(dilseries, arraydesc, timeseries, exportNo) 
+    getIntercepts(dilseries, arraydesc)
+    analyzeIntercepts(intercepts, test="F", export)
+    getSignals(timeseries, intercepts, arraydesc, exportNo)
+	as.my(v)
 }
 \arguments{
   \item{dilseries}{foreground signal matrix as result of write.Data() and import of resulting txt file, but just sample_type "control", i.e. dilution series}
   \item{arraydesc}{"arraydescription" matrix of the RPPA data set list}
   \item{timeseries}{foreground signal matrix as result of write.Data() and import of resulting txt file, but just sample_type "measurement"}
-  \item{eportNo}{integer of 1-4 (see R script) which of the linear fits should be exported to the attribute of the result, variable for analyzeIntercepts()}
+  \item{exportNo}{integer of 1-4 (see R script) which of the linear fits should be exported to the attribute of the result, variable for \code{analyzeIntercepts()}}
+  \item{intercepts}{Intercepts}
+  \item{test}{Test}
+  \item{export}{Export}
+  \item{v}{Some variable}
 }
 \value{
 matrix with adapted signal intensities via subtraction of dilution intercept at concentration 0
@@ -25,6 +37,7 @@ matrix with adapted signal intensities via subtraction of dilution intercept at 
 Daniel Kaschek, Silvia von der Heyde
 }
 \examples{
+\dontrun{
 	library(RPPanalyzer)
 	data(dataII)
   write.Data(dataII)
@@ -37,4 +50,5 @@ Daniel Kaschek, Silvia von der Heyde
   # do intercept correction
   correctedData<-correctDilinterc(dilseries=times[which(times$"sample_type"=="control" & !is.na(times$dilSeriesID)),], arraydesc=dataII[[3]],
                            timeseries=times[which(times$sample_type=="measurement"),],exportNo=4)
+}
 }

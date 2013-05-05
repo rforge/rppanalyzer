@@ -13,7 +13,7 @@ Draw a heatmap with column side colors from a RPPA data
    remove = c("blank", "protein", "Abmix"), distance = "eucsq",
    dendros = "both", cutoff = 0.005, fileName = NULL,
    cols = colorpanel(100, low = "blue", mid = "yellow", high = "red"),
-   hclust.method="ward")
+   hclust.method="ward", scale = "row")
 }
 \arguments{
   \item{x}{
@@ -51,7 +51,7 @@ Draw a heatmap with column side colors from a RPPA data
 }
   \item{scale}{
     String. Either \code{row, column, both or none} for row or column, both or no scaling, respectively.
-
+}
 }
 
 \value{

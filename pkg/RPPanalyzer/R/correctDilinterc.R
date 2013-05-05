@@ -3,8 +3,15 @@
 
 correctDilinterc <- function(dilseries, arraydesc, timeseries, exportNo) {
   
-    as.my <- function(v) as.numeric(as.character(v))
-    
+    intercepts<-getIntercepts(dilseries, arraydesc)
+    correctedData<-getSignals(timeseries, intercepts, arraydesc, exportNo)
+    return(correctedData)
+}
+
+    as.my <- function(v) {
+		as.numeric(as.character(v))
+	}
+
     ## getIntercepts ##
     ##
     ## Purpose: Derive intercepts of dilution series in dependence of dilSeriesID (column in sampledescription.txt)
@@ -62,40 +69,7 @@ correctDilinterc <- function(dilseries, arraydesc, timeseries, exportNo) {
       dev.off()
       return(result)
     }
-    
-    
-    ## analyzeIntercepts ##
-    ## 
-    ## Purpose: Analysis of Variances for nested models.
-    ## 
-    ## Input: intercepts = result from getIntercepts()
-    ##        export = integer which of the linear fits should be exported to the attribute of the result
-    ##        test = test parameter for ANOVA (see documentation "anova")
-    ##
-    ## Output: anova object, one of the fits (in attribute "fit"), pdf with anova RSS barplot
-    
-    analyzeIntercepts <- function(intercepts, test="F", export) {
-    
-      fit <- list()
-      fit[[1]] <- lm(intercept ~ 1, data=intercepts, weights=1/errIntercept^2)
-      fit[[2]] <- lm(intercept ~ ab, data=intercepts, weights=1/errIntercept^2)
-      fit[[3]] <- lm(intercept ~ ab + slide, data=intercepts, weights=1/errIntercept^2)
-      fit[[4]] <- lm(intercept ~ ab + slide + dilseries_id, data=intercepts, weights=1/errIntercept^2)
-      
-      ano <- anova(fit[[1]], fit[[2]], fit[[3]], fit[[4]], test=test)
-      rss <- ano$RSS
-      names(rss) <- c("const.", "+ ab", "+ slide", "+ dilseries_id")
-      pdf("anovaIntercepts_Output.pdf")
-      barplot(rss, ylab="weighted RSS")
-      dev.off()
-      
-      attr(ano, "fit") <- fit[[export]]
-      
-      return(ano)
-    }
-    
-    
-    ## getSignals ##
+     ## getSignals ##
     ## 
     ## Purpose: Update the timeseries signal to (FG - intercept).
     ## 
@@ -123,8 +97,36 @@ correctDilinterc <- function(dilseries, arraydesc, timeseries, exportNo) {
       }
       return(result)	
     }
+ 
+    ## analyzeIntercepts ##
+    ## 
+    ## Purpose: Analysis of Variances for nested models.
+    ## 
+    ## Input: intercepts = result from getIntercepts()
+    ##        export = integer which of the linear fits should be exported to the attribute of the result
+    ##        test = test parameter for ANOVA (see documentation "anova")
+    ##
+    ## Output: anova object, one of the fits (in attribute "fit"), pdf with anova RSS barplot
     
-    intercepts<-getIntercepts(dilseries, arraydesc)
-    correctedData<-getSignals(timeseries, intercepts, arraydesc, exportNo)
-    return(correctedData)
-}
+    analyzeIntercepts <- function(intercepts, test="F", export) {
+      fit <- list()
+      errIntercept <- intercepts[,"errIntercept"]
+      fit[[1]] <- lm(intercept ~ 1, data=intercepts, weights=1/errIntercept^2)
+      fit[[2]] <- lm(intercept ~ ab, data=intercepts, weights=1/errIntercept^2)
+      fit[[3]] <- lm(intercept ~ ab + slide, data=intercepts, weights=1/errIntercept^2)
+      fit[[4]] <- lm(intercept ~ ab + slide + dilseries_id, data=intercepts, weights=1/errIntercept^2)
+      
+      ano <- anova(fit[[1]], fit[[2]], fit[[3]], fit[[4]], test=test)
+      rss <- ano$RSS
+      names(rss) <- c("const.", "+ ab", "+ slide", "+ dilseries_id")
+      pdf("anovaIntercepts_Output.pdf")
+      barplot(rss, ylab="weighted RSS")
+      dev.off()
+      
+      attr(ano, "fit") <- fit[[export]]
+      
+      return(ano)
+    }
+ 
+
+
