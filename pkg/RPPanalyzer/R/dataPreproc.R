@@ -1,0 +1,86 @@
+dataPreproc<-function(dataDir=getwd(), blocks=12, spot="aushon", exportNo=4){
+                   
+  ################################################################################
+  # 1. Import and convert raw data from ".gpr"-files, slide- & sampledescription #
+  ################################################################################
+  
+  setwd(dataDir) 
+  rawdat<-read.Data(blocksperarray=blocks, spotter=spot) # list of length 4, see read.Data()
+  
+  # create an analysis folder labeled by the date of analysis
+  DIR <- paste("analysis",sub(" .*$","",Sys.time()),sep="_")
+  if(!file.exists(DIR)){
+    dir.create(DIR)
+  }
+  
+  # write data to Excel sheet format, see write.Data()
+  setwd(DIR)
+  write.Data(rawdat)
+  # remove NA-rows in RPPanalyzer outputs (i.e. no measurement)
+  fgRaw.tmp<-read.delim("Dataexpression.txt", stringsAsFactors=FALSE, row.names=NULL, header=TRUE) # foreground intensities
+  fgRaw<-read.delim("Dataexpression.txt", 
+                    skip=max(which(fgRaw.tmp[,1]==""))+1, stringsAsFactors=FALSE, row.names=NULL, header=TRUE)
+  bgRaw.tmp<-read.delim("Databackground.txt", stringsAsFactors=FALSE, row.names=NULL, header=TRUE) # background intensities
+  bgRaw<-read.delim("Databackground.txt", 
+                    skip=max(which(bgRaw.tmp[,1]==""))+1, stringsAsFactors=FALSE, row.names=NULL, header=TRUE)
+  fgNAVec<-which(is.na(fgRaw[,"ID"]))
+  bgNAVec<-which(is.na(bgRaw[,"ID"]))
+  fgRaw<-fgRaw[-fgNAVec,] 
+  bgRaw<-bgRaw[-bgNAVec,]
+  colnames(fgRaw)<-sub("X","",gsub("\\.","-",colnames(fgRaw)))
+  colnames(bgRaw)<-sub("X","",gsub("\\.","-",colnames(bgRaw)))
+  
+  arrayDesc<-rawdat$arraydescription
+  
+  
+  ############################################################
+  # 2. FOLD CHANGE calculation according to correctDilinterc #
+  ############################################################
+  
+  # split raw data (fgRaw) into dilution data (dilData) and measurement data to be normalized
+  dilData <- fgRaw[which(fgRaw$sample_type=="control" & !is.na(fgRaw$dilSeriesID)),]
+
+  # adapt signal intensities via subtraction of dilution intercept at concentration 0
+  normdatFC<-correctDilinterc(dilseries=dilData, arraydesc=arrayDesc, timeseries=fgRaw[which(fgRaw$sample_type=="measurement"),], 
+                              exportNo=exportNo)
+
+  # correct data values for negative ones
+  if(min(normdatFC[,colnames(arrayDesc)])<0){
+    normdatFC[,colnames(arrayDesc)]<-normdatFC[,colnames(arrayDesc)]+abs(min(normdatFC[,colnames(arrayDesc)]))+1
+  }
+  
+  cordat<-list()
+  cordat[[1]]<-normdatFC[,colnames(arrayDesc)]
+  #dummy matrix, BG neglectible --> not corrected for intercepts
+  cordat[[2]]<-bgRaw[which(bgRaw$sample_type=="measurement"),colnames(cordat[[1]])] 
+  cordat[[3]]<-rawdat$arraydescription[,colnames(cordat[[1]])]
+  cordat[[4]]<-rawdat$sampledescription[-fgNAVec,]
+  cordat[[4]]<-cordat[[4]][which(cordat[[4]]$sample_type=="measurement"),]
+  names(cordat)<-names(rawdat)
+
+  
+  ########################
+  # 3. FCF normalization #
+  ########################
+  
+  # normalizeRPPA() with method "proteinDye" uses FCF signal for normalization 
+  # vals = "native" --> for normalisation the data is logged, afterwards delogged 
+  normdat<-normalizeRPPA(cordat, method="proteinDye", vals="native") # list of length 4, see read.Data()
+    
+  
+  ##############################
+  ## 4. Quality Control plots ##
+  ##############################
+  
+  # plot target and blank signal from serially diluted control samples of raw RPPA data set
+  plotQC(rawdat,file="QC_dilutioncurve_raw.pdf")
+  
+  # plot the blank signals and the target specific signals of dilution intercept corrected and FCF normalized RPPA data
+  plotMeasurementsQC(normdat, file = "QC_targetVSblank_normed.pdf", arrays2rm = c("protein"))
+ 
+  # qq-plot
+  plotqq(normdat, fileName = "QC_qqPlot_normed.pdf")
+  
+  setwd(dataDir)
+  return(list(rawdat=rawdat, cordat=cordat, normdat=normdat, DIR=DIR))
+}
