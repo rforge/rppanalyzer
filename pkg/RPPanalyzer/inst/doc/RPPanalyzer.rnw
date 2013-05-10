@@ -43,7 +43,7 @@
 \begin{document}
 %\doublespacing
 
-\title{RPPanalyzer {\small(Version 1.0.3)}\\Analyze reverse phase protein array data\\[5mm]
+\title{RPPanalyzer {\small(Version 1.0.3!!!)}\\Analyze reverse phase protein array data\\[5mm]
 User`s Guide \\}
 
 \author{Heiko Mannsperger and Stephan Gade\\
@@ -135,7 +135,7 @@ add more columns describing every experimental parameter.
 
 \subsubsection{Columns concentration, dilution and dilSeriesID}
 
-The column \Rfunarg{concentration} provides numeric data with information of the sample concentration. In case of serially diluted samples describe the dilution steps (starting with a $1$ for the highest concentration) in column \Rfunarg{dilution}. The column \Rfunarg{dilSeriesID} contains the values that should be used for dilution intercept correction via correctDilinterc(), e.g. cell line names. It should have at least two distinct values which must be matchable in ''control'' and ''measurement''. NA values denote that control values should not be used.
+The column \Rfunarg{concentration} provides numeric data with information of the sample concentration. In case of serially diluted samples describe the dilution steps (starting with a $1$ for the highest concentration) in column \Rfunarg{dilution}. The column \Rfunarg{dilSeriesID} contains the values that should be used for dilution intercept correction via \Rfunction{correctDilinterc}, e.g. cell line names. It should have at least two distinct values which must be matchable in ''control'' and ''measurement''. NA values denote that control values should not be used.
 
 \subsection{Slide description}
 
@@ -214,6 +214,7 @@ dataBGcorrected <- correctBG(rawdata,method="normexp")
 In case of serially diluted samples you have to calculate the (relative) concentration 
 of the samples. You can use either a linear model (function \Rfunction{calcLinear}) or a logistic three parameter model (function \Rfunction{calcLogistic}). We recommend to use the Serial Dilution Curve algorithm \cite{Zhang:2009p812} which is the most recent development and produces very robust concentration values (function \Rfunction{calcSdc}). Another possibility of quantification is the \emph{SuperCurve} package \citep{supercurve} which can be accessed using the wrapper function \Rfunction{calcSuperCurve}. 
 To use the  \Rfunction{calcSuperCurve} function you have to download and install the package from the MD Anderson Bioinformatics home page (\url{http://bioinformatics.mdanderson.org/Software/OOMPA/}).
+Another recommendable way is to apply the \Rfunction{correctDilinterc} function either directly or within the data preprocessing function \Rfunction{dataPreproc}. It derives intercepts of dilution series in dependence of \Rfunarg{dilSeriesID}, defined in the \emph{sampledescription} file, as well as \Rfunarg{slide}, \Rfunarg{pad}, \Rfunarg{incubation\_run} and \Rfunarg{spotting\_run}, defined in the data frame holding the array information. A smoothing spline is used to extrapolate to zero. Nonparametric bootstrap is used to estimate uncertainty of the intercept estimate. Linear models are applied to the intercepts as response variables in dependence of diverse predictors, namely simply a constant, the antibody, antibody + slide or antibody + slide + sample. Via Analysis of Variances (ANOVA) it is tested which model fits best. Finally the dilution intercept estimation is subtracted from the original foreground expression.
 
 <<calculateSdc,echo=true,results=hide,eval=false>>=
 ## To run the serial dilution curve algorithm it is neccessary
@@ -228,6 +229,7 @@ For the arguments of the \Rfunction{calcSdc} function we want to refer to the he
 <<calculateSdcHelp,echo=true,results=hide,eval=false>>=
 ?calcSdc
 @
+For the usage of the \Rfunction{correctDilinterc} function we recommend the data preprocessing function \Rfunction{dataPreproc}.
 
 \section{Quality control plots}
 
@@ -331,6 +333,14 @@ norm_values_eV <- normalizeRPPA(HKdata,method="extValue",
 ## replicates (not serially diluted). In this case you can aggregate the replicate
 ## spots after the normalization:
 norm_data <- sample.median(norm_values_pd)
+@
+
+\section{Data preprocessing}
+Among all possible correction and normalization methods prior to actual data analysis, we recommend the correction based on serially diluted samples via \Rfunction{correctDilinterc}, combined with normalization according to total protein concentration via FCF. These important preprocessing steps are implemented in the \Rfunction{dataPreproc} function. It imports the raw data, corrects and normalizes it and generates plots for quality checks.
+@
+For the usage of the \Rfunction{dataPreproc} function we want to refer to the help page which can be accessed with
+<<calculateSdcHelp,echo=true,results=hide,eval=false>>=
+?dataPreproc
 @
 
 \section{Export data as text file}
