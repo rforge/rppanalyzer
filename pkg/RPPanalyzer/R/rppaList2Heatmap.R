@@ -5,8 +5,7 @@ function (x,sampledescription="sample",side.color="tissue"
          , cols=colorpanel(100, low="blue",mid="yellow",high="red"), 
          hclust.method="ward", scale="row"){
 
-         stopifnot(require(gplots))
-         
+       
    data <- select.measurements(x)
 
 	mat <- data[[1]]

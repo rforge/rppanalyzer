@@ -21,8 +21,7 @@
 #' @author Marc Johannes \email{M.Johannes@@dkfz.de}
 plotHeatmap <- function(data, distance = "eucsq", dendros="both", cutoff=0.005, toFile=FALSE, fileName="Heatmap.pdf", cols=colorpanel(100, low="blue",mid="yellow",high="red"), hclust.method="ward", scale="row", ...){
 
-  stopifnot(require(gplots))
-  
+
   distance.measures   <- c("eucsq", "euclidean","maximum","manhattan","canberra","binary","minkowski")
   dendro.orientation  <- c("row","column","both","none")
 

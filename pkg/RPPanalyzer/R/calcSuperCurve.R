@@ -11,12 +11,6 @@
 #' 
 calcSuperCurve <- function(x,model="cobs", method="nlrq", sample.id=c("sample","sample.n"),sel=c("measurement","control"), dilution="dilution", block.design, plot=T) {
 
-    if(!require(SuperCurve)) {
-    
-        stop("This function requires the package SuperCurve. Please install it from 'http://bioinformatics.mdanderson.org/Software/OOMPA/'. Otherwise use the function 'calcSdc' instead.")
-
-    }
-
     # at first use create.ID.col to create unique identifiers   
     xi <- create.ID.col(x,sample.id=sample.id)
 

@@ -28,6 +28,7 @@ correctDilinterc <- function(dilseries, arraydesc, timeseries, exportNo) {
     
     getIntercepts <- function(dilseries, arraydesc) {
       result <- c()
+      dilSeriesID<-NULL
       pdf("getIntercepts_Output.pdf")
       # select dilseries_id and pad_slide_incubRun_spotRun
       for(A1 in unique(dilseries$dilSeriesID)) {
@@ -82,6 +83,7 @@ correctDilinterc <- function(dilseries, arraydesc, timeseries, exportNo) {
     
     getSignals <- function(timeseries, intercepts, arraydesc, exportNo) {
       
+      dilSeriesID<-NULL
       anaIntercept <- analyzeIntercepts(intercepts, test="F", export=exportNo)
       fit <- attr(anaIntercept, "fit")
       result <- timeseries
