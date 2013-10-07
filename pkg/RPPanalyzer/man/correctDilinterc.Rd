@@ -8,7 +8,7 @@
 Dilution series intersect correction
 }
 \description{
-Consists of 3 functions: getIntercepts(), analyzeIntercepts() and getSignals().
+Consists of 3 functions: \code{getIntercepts()}, \code{analyzeIntercepts()} and \code{getSignals()}.
 The first one derives intercepts of dilution series in dependence of dilSeriesID (column in sampledescription.txt) and slide/pad/incubationRun/spottingRun number (colnames of arraydescription). A smoothing spline is used to extrapolate to 0. Nonparametric bootstrap is used to estimate uncertainty of the intercept estimate.
 The second function is used in the last one and does Analysis of Variances for nested models.
 The last one updates the original timeseries signal to (foreground expression - intercept).
@@ -21,14 +21,14 @@ The last one updates the original timeseries signal to (foreground expression - 
 	as.my(v)
 }
 \arguments{
-  \item{dilseries}{foreground signal matrix as result of write.Data() and import of resulting txt file, but just sample_type "control", i.e. dilution series}
+  \item{dilseries}{foreground signal matrix as result of \code{write.Data()} and import of resulting txt file, but just sample_type "control", i.e. dilution series}
   \item{arraydesc}{"arraydescription" matrix of the RPPA data set list}
-  \item{timeseries}{foreground signal matrix as result of write.Data() and import of resulting txt file, but just sample_type "measurement"}
+  \item{timeseries}{foreground signal matrix as result of \code{write.Data()} and import of resulting txt file, but just sample_type "measurement"}
   \item{exportNo}{integer of 1-4 (see R script) which of the linear fits should be exported to the attribute of the result, variable for \code{analyzeIntercepts()}}
-  \item{intercepts}{Intercepts}
-  \item{test}{Test}
-  \item{export}{Export}
-  \item{v}{Some variable}
+  \item{intercepts}{output of \code{getIntercepts()}, data frame with columns for dilSeriesID and slide/pad/incubationRun/spottingRun number as well as antibody, estimated intercept and estimated error of intercept}
+  \item{test}{test parameter for ANOVA (see documentation of \code{anova()}), default is "F"}
+  \item{export}{see \code{exportNo}}
+  \item{v}{some variable}
 }
 \value{
 matrix with adapted signal intensities via subtraction of dilution intercept at concentration 0
