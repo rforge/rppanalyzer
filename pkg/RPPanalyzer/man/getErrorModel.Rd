@@ -14,7 +14,7 @@ getErrorModel(dataexpression, verbose=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{dataexpression}{data.frame, standard output from RPPAnalyzer's \code{\link{write.Data}}.}
+  \item{dataexpression}{data.frame, standard output from RPPanalyzer's \code{\link{write.Data}}.}
   \item{verbose}{logical, if TRUE, the function prints out additional information and produces a PDF file in the working directory with the signal vs. variance plots.}
 }
 \details{
