@@ -25,8 +25,12 @@ dataPreproc<-function(dataDir=getwd(), blocks=12, spot="aushon", exportNo=4){
                     skip=max(which(bgRaw.tmp[,1]==""))+1, stringsAsFactors=FALSE, row.names=NULL, header=TRUE)
   fgNAVec<-which(is.na(fgRaw[,"ID"]))
   bgNAVec<-which(is.na(bgRaw[,"ID"]))
-  fgRaw<-fgRaw[-fgNAVec,] 
-  bgRaw<-bgRaw[-bgNAVec,]
+  if(length(fgNAVec)>0){
+    fgRaw<-fgRaw[-fgNAVec,] 
+  }
+  if(length(bgNAVec)>0){
+    bgRaw<-bgRaw[-bgNAVec,]
+  }
   colnames(fgRaw)<-sub("X","",gsub("\\.","-",colnames(fgRaw)))
   colnames(bgRaw)<-sub("X","",gsub("\\.","-",colnames(bgRaw)))
   
