@@ -58,7 +58,10 @@ dataPreproc<-function(dataDir=getwd(), blocks=12, spot="aushon", exportNo=4){
   #dummy matrix, BG neglectible --> not corrected for intercepts
   cordat[[2]]<-bgRaw[which(bgRaw$sample_type=="measurement"),colnames(cordat[[1]])] 
   cordat[[3]]<-rawdat$arraydescription[,colnames(cordat[[1]])]
-  cordat[[4]]<-rawdat$sampledescription[-fgNAVec,]
+  cordat[[4]]<-rawdat$sampledescription
+  if(length(fgNAVec)>0){
+    cordat[[4]]<-rawdat$sampledescription[-fgNAVec,]
+  }
   cordat[[4]]<-cordat[[4]][which(cordat[[4]]$sample_type=="measurement"),]
   names(cordat)<-names(rawdat)
 
@@ -68,8 +71,8 @@ dataPreproc<-function(dataDir=getwd(), blocks=12, spot="aushon", exportNo=4){
   ########################
   
   # normalizeRPPA() with method "proteinDye" uses FCF signal for normalization 
-  # vals = "native" --> for normalisation the data is logged, afterwards delogged 
-  normdat<-normalizeRPPA(cordat, method="proteinDye", vals="native") # list of length 4, see read.Data()
+  # vals = "logged" --> the data is logged
+  normdat<-normalizeRPPA(cordat, method="proteinDye", vals="logged") # list of length 4, see read.Data()
     
   
   ##############################
