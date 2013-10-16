@@ -34,7 +34,7 @@ rppa2boxplot_mod<-function (x, param , control=NULL, orderGrp=NULL, file = "boxp
         }
         names(grouplist) <- groupx
         par(lwd=2,bty="n")
-        boxplot(grouplist,main=c("target: ",data[[3]]["target",i]),bty="n", ylab="expression level",xlab="sample groups", 
+        boxplot(grouplist,main=c("target: ",data[[3]]["target",i]),bty="n", ylab="signal intensity [a.u.]",xlab="sample groups", 
                 ylim=c(c(min(unlist(grouplist))),c(max(unlist(grouplist)))*1.1), las=2)
         stripchart(grouplist,add=T,vertical=T,method="jitter",jitter=0.3,col="red")      
         text( c(1:length(groups)),c(max(unlist(grouplist)))*1.1,c("control",l.pvals[[i]]), col="green")
@@ -45,7 +45,7 @@ rppa2boxplot_mod<-function (x, param , control=NULL, orderGrp=NULL, file = "boxp
         }
         names(grouplist) <- groupx[match.g]
         par(lwd=2,bty="n")
-        boxplot(grouplist,main=c("target: ",data[[3]]["target",i]),bty="n", ylab="expression level",xlab="sample groups", 
+        boxplot(grouplist,main=c("target: ",data[[3]]["target",i]),bty="n", ylab="signal intensity [a.u.]",xlab="sample groups", 
                 ylim=c(c(min(unlist(grouplist))),c(max(unlist(grouplist)))*1.1), las=2)
         stripchart(grouplist,add=T,vertical=T,method="jitter",jitter=0.3,col="red")      
         text( c(1:length(groups)),c(max(unlist(grouplist)))*1.1,c("control",l.pvals[[i]])[match.g], col="green")
@@ -77,7 +77,7 @@ rppa2boxplot_mod<-function (x, param , control=NULL, orderGrp=NULL, file = "boxp
         }
         names(grouplist) <- groupx
         par(lwd=2,bty="n")
-        boxplot(grouplist,main=c("target: ",data[[3]]["target",i]),bty="n", ylab="expression level",xlab="sample groups", 
+        boxplot(grouplist,main=c("target: ",data[[3]]["target",i]),bty="n", ylab="signal intensity [a.u.]",xlab="sample groups", 
                 ylim=c(c(min(unlist(grouplist))),c(max(unlist(grouplist)))*1.1), las=2)
         stripchart(grouplist,add=T,vertical=T,method="jitter",jitter=0.3,col="red")      
         text( ifelse(length(groups)%%2==0, (length(groups))/2 + 0.5, (length(groups))/2), c(max(unlist(grouplist)))*1.1,
@@ -89,7 +89,7 @@ rppa2boxplot_mod<-function (x, param , control=NULL, orderGrp=NULL, file = "boxp
         }
         names(grouplist) <- groupx[match.g]
         par(lwd=2,bty="n")
-        boxplot(grouplist,main=c("target: ",data[[3]]["target",i]),bty="n", ylab="expression level",xlab="sample groups", 
+        boxplot(grouplist,main=c("target: ",data[[3]]["target",i]),bty="n", ylab="signal intensity [a.u.]",xlab="sample groups", 
                 ylim=c(c(min(unlist(grouplist))),c(max(unlist(grouplist)))*1.1), las=2)
         stripchart(grouplist,add=T,vertical=T,method="jitter",jitter=0.3,col="red")      
         text(ifelse(length(groups)%%2==0, (length(groups))/2 + 0.5, (length(groups))/2), c(max(unlist(grouplist)))*1.1,l.pvals[[i]], col="green")

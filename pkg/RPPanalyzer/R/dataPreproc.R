@@ -71,8 +71,8 @@ dataPreproc<-function(dataDir=getwd(), blocks=12, spot="aushon", exportNo=4){
   ########################
   
   # normalizeRPPA() with method "proteinDye" uses FCF signal for normalization 
-  # vals = "logged" --> the data is logged
-  normdat<-normalizeRPPA(cordat, method="proteinDye", vals="logged") # list of length 4, see read.Data()
+  # the median of the normalizer values is added after normalization of log2 data and the data is returned at native scale
+  normdat<-normalizeRPPA(cordat, method="proteinDye", vals="native") # list of length 4, see read.Data()
     
   
   ##############################

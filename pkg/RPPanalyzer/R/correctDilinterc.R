@@ -55,7 +55,7 @@ correctDilinterc <- function(dilseries, arraydesc, timeseries, exportNo) {
             t <- seq(0, max(x), len=100)
             xrange <- c(0, max(x))
             yrange <- c(0, max(c(y, predict(ssp, t)$y)))
-            plot(x, y, ylim = yrange, xlim = xrange, xlab="Concentration")
+            plot(x, y, ylim = yrange, xlim = xrange, xlab="concentration", ylab="signal intensity [a.u.]")
             matplot(t, predict(ssp, t)$y, type="l", add=TRUE)
             arrows(0, intercept, 0, intercept-errIntercept, length=max(x)/50, angle=90, lwd=2)
             arrows(0, intercept, 0, intercept+errIntercept, length=max(x)/50, angle=90, lwd=2)
