@@ -10,7 +10,8 @@ Average biological replicates over different slides.
 The function assumes that each signal originates from an underlying true value which is scaled by a scaling factor depending on the slide and replicate. The method optimizes the scaling and truth parameters such that the distance between predicted and actual signals is minimized. There are aguments to specify what factors the scaling factors and truth parameters depend on.
 }
 \usage{
-averageData(subsample, scaling = c("slide", "replicate"), distinguish = c("cellline", "treatment"))
+averageData(subsample, scaling = c("slide", "replicate"), 
+	distinguish = c("cellline", "treatment"))
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

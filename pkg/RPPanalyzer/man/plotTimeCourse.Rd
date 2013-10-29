@@ -6,9 +6,11 @@
   model on the time course data.
  }
 \usage{
-plotTimeCourse(x, tc.identifier = c("sample", "stimulation", "inhibition", "stim_concentration"),
-tc.reference=NULL, plot.split = "experiment", file = NULL,
-arrays2rm = c("protein", "Blank"), plotformat = "stderr",log=TRUE, color=NULL, xlim = NULL, ylim = NULL)
+plotTimeCourse(x, tc.identifier = 
+			c("sample", "stimulation", "inhibition", "stim_concentration"),
+		tc.reference=NULL, plot.split = "experiment", file = NULL,
+		arrays2rm = c("protein", "Blank"), plotformat = "stderr",
+		log=TRUE, color=NULL, xlim = NULL, ylim = NULL)
 }
 \arguments{
   \item{x}{ List containing RPPA data set }
@@ -57,18 +59,24 @@ arrays2rm = c("protein", "Blank"), plotformat = "stderr",log=TRUE, color=NULL, x
 \dontrun{
 	library(RPPanalyzer)
 	data(dataII)
-	plotTimeCourse(dataII,tc.identifier=c("sample","stimulation","stim_concentration","inhibition")
-               ,plot.split="experiment",plotformat="stderr")
-    plotTimeCourse(dataII,tc.identifier=c("sample","stimulation","stim_concentration","inhibition")
-               ,plot.split="experiment",plotformat="errbar")
-    plotTimeCourse(dataII,tc.identifier=c("sample","stimulation","stim_concentration","inhibition")
-               ,plot.split="experiment",plotformat="both")
-    plotTimeCourse(dataII,tc.identifier=c("sample","stimulation","stim_concentration","inhibition")
-               ,plot.split="experiment",plotformat="rawdata")
-    plotTimeCourse(dataII,tc.identifier=c("sample","stimulation","stim_concentration","inhibition")
-               ,plot.split="experiment",plotformat="spline")
-    plotTimeCourse(dataII,tc.identifier=c("sample","stimulation","stim_concentration","inhibition")
-               ,plot.split="experiment",plotformat="spline_noconf")
+	plotTimeCourse(dataII,
+		tc.identifier=c("sample","stimulation","stim_concentration","inhibition")
+        ,plot.split="experiment",plotformat="stderr")
+    plotTimeCourse(dataII,
+		tc.identifier=c("sample","stimulation","stim_concentration","inhibition")
+        ,plot.split="experiment",plotformat="errbar")
+    plotTimeCourse(dataII,
+		tc.identifier=c("sample","stimulation","stim_concentration","inhibition")
+        ,plot.split="experiment",plotformat="both")
+    plotTimeCourse(dataII,
+		tc.identifier=c("sample","stimulation","stim_concentration","inhibition")
+        ,plot.split="experiment",plotformat="rawdata")
+    plotTimeCourse(dataII,
+		tc.identifier=c("sample","stimulation","stim_concentration","inhibition")
+        ,plot.split="experiment",plotformat="spline")
+    plotTimeCourse(dataII,
+		tc.identifier=c("sample","stimulation","stim_concentration","inhibition")
+        ,plot.split="experiment",plotformat="spline_noconf")
                
 }
 }

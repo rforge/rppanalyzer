@@ -11,7 +11,10 @@
 }
 
 \usage{
-    calcSdc(x,sample.id=c("sample","sample.n"),sel=c("measurement","control"),dilution="dilution", D0=2,sensible.min=5, sensible.max=1.e9,minimal.err=5, plot=T, r=1.2)
+    calcSdc(x,sample.id=c("sample","sample.n"),
+		sel=c("measurement","control"), dilution="dilution",
+		D0=2,sensible.min=5, sensible.max=1.e9,minimal.err=5,
+		plot=T, r=1.2)
 }
 
 \arguments{

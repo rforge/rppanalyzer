@@ -8,7 +8,8 @@
    data using cor.test.
 }
 \usage{
-    test.correlation(x, param, method.cor = "kendall", method.padj = "BH", file = "correlation_plot.pdf") 
+test.correlation(x, param, method.cor = "kendall", 
+	method.padj = "BH", file = "correlation_plot.pdf") 
 }
 \arguments{
   \item{x}{
@@ -44,10 +45,10 @@
 }
 \examples{
 \dontrun{
-	library(RPPanalyzer)
-	data(dataIII)
-	dataIII_median <- sample.median(dataIII)
-	test.correlation(dataIII_median,param="staging")
+library(RPPanalyzer)
+data(dataIII)
+dataIII_median <- sample.median(dataIII)
+test.correlation(dataIII_median,param="staging")
 }
 
 }

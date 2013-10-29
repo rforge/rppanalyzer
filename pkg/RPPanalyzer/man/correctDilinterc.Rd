@@ -38,17 +38,21 @@ Daniel Kaschek, Silvia von der Heyde
 }
 \examples{
 \dontrun{
-	library(RPPanalyzer)
-	data(dataII)
-  write.Data(dataII)
-  times<-read.delim("Datasample.medians.txt", skip=8, stringsAsFactors=FALSE, row.names=NULL, header=TRUE, ,check.names=FALSE)
-  # adapt data set for this example
-  times<-times[which(times$sample!="cellline1"),]
-  # workaround: add column 'dilSeriesID' which should actually be already defined in sampledescription.txt, but not for this data set 
-  times[,"inhibition"]<-times$sample
-  colnames(times)[which(colnames(times)=="inhibition")]<-"dilSeriesID"
-  # do intercept correction
-  correctedData<-correctDilinterc(dilseries=times[which(times$"sample_type"=="control" & !is.na(times$dilSeriesID)),], arraydesc=dataII[[3]],
-                           timeseries=times[which(times$sample_type=="measurement"),],exportNo=4)
+library(RPPanalyzer)
+data(dataII)
+write.Data(dataII)
+times<-read.delim("Datasample.medians.txt", skip=8, stringsAsFactors=FALSE,
+ row.names=NULL,header=TRUE, ,check.names=FALSE)
+# adapt data set for this example
+times<-times[which(times$sample!="cellline1"),]
+# workaround: add column 'dilSeriesID' which should actually 
+# be already defined in sampledescription.txt, but not for this data set 
+times[,"inhibition"]<-times$sample
+colnames(times)[which(colnames(times)=="inhibition")]<-"dilSeriesID"
+# do intercept correction
+correctedData <- correctDilinterc(
+	dilseries=times[which(times$"sample_type"=="control" & !is.na(times$dilSeriesID)),],
+	arraydesc=dataII[[3]],
+	timeseries=times[which(times$sample_type=="measurement"),],exportNo=4)
 }
 }

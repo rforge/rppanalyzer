@@ -5,7 +5,8 @@
  Draws boxplots of groups of an RPPA data set and compares the expression values to a reference group.
 }
 \usage{
-rppa2boxplot(x, param = "tissue", wilcoxtest = FALSE, control = "normal", file = "boxplot_groups.pdf")
+rppa2boxplot(x, param = "tissue", wilcoxtest = FALSE, control = "normal", 
+file = "boxplot_groups.pdf")
 }
 \arguments{
   \item{x}{ List with RPPA data with aggregated replicate spots }

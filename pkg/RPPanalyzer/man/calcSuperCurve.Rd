@@ -8,7 +8,9 @@ Calculates the protein concentration of a serial diluted sample stored in an RPP
 }
 
 \usage{
-calcSuperCurve(x,model="cobs", method="nlrq", sample.id=c("sample","sample.n"),sel=c("measurement","control"), dilution="dilution", block.design, plot=T)
+calcSuperCurve(x,model="cobs", method="nlrq",
+	sample.id=c("sample","sample.n"),sel=c("measurement","control"),
+	dilution="dilution", block.design, plot=T)
 }
 
 \arguments{
@@ -46,7 +48,9 @@ library(RPPanalyzer)
 data(ser.dil.samples)
 }
 
-\dontrun{predicted.data <- calcSuperCurve(ser.dil.samples, sel=c("measurement"), block.design=c(1,4))}
+\dontrun{
+predicted.data <- calcSuperCurve(ser.dil.samples, sel=c("measurement"), 
+block.design=c(1,4))}
 
 }
 \keyword{ manip }
