@@ -9,7 +9,7 @@ getErrorModel <- function(dataexpression, verbose=FALSE) {
   emptyRows <- rev(which(dataexpression[,1] == ""))[1]
   
   rowNames <- as.character(unlist(dataexpression[1:(emptyRows+1),emptyCols+1]))
-  colNames <- as.character(unlist(dataexpression[emptyCols+1, 1:(emptyCols+1)]))
+  colNames <- as.character(unlist(dataexpression[emptyRows+1, 1:(emptyCols+1)]))
   
   nGpr <- which(rowNames == "gpr")
   nTarget <- which(rowNames == "target")
@@ -38,7 +38,7 @@ getErrorModel <- function(dataexpression, verbose=FALSE) {
   ## Subsetting
   
   result <- c()
-  ID<-NULL
+  ID<-NULL  
   if(verbose) pdf("errorModel.pdf")
   
   for(A0 in unique(signals$slide)) {
@@ -94,7 +94,7 @@ getErrorModel <- function(dataexpression, verbose=FALSE) {
       
       
       var0 <- mean(variances$V2[order(variances$V1)[1:(dim(variances)[1]/20)]])
-      varR <- 0.03^2 #(mean(variances$V2[nearEnd])-var0)/(mean(variances$V1[nearEnd])^2)
+      varR <- 0.03^2 
       
       
       
