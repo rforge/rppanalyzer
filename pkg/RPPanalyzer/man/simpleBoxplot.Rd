@@ -2,7 +2,6 @@
 \alias{simpleBoxplot}
 \title{Draws boxplots of groups of an RPPA data set.}
 \description{
- Modified version of boxplot.groups(). 
  Draws boxplots of groups of an RPPA data set. Additionally a grouping order for plotting can be provided here.
  }
 \usage{
