@@ -34,7 +34,7 @@ The pdf files \code{getIntercepts_Output} and \code{anovaIntercepts_Output} resu
 Finally, three pdf files for quality checking are returned. 
 \code{QC_dilutioncurve_raw.pdf} plots target and blank (2nd antibody only) signals from serially diluted control samples of the raw RPPA data set, see \code{\link{plotQC}}.
 \code{QC_targetVSblank_normed.pdf} plots blank signals vs. target specific signals of dilution intercept corrected and FCF normalized RPPA data, see \code{\link{plotMeasurementsQC}}.
-\code{QC_qqPlot_normed.pdf} containes qq-plots of dilution intercept corrected and FCF normalized RPPA data, see \code{\link{plotqq}}.
+\code{QC_qqPlot_normed.pdf} contains qq-plots of dilution intercept corrected and FCF normalized RPPA data, see \code{\link{plotqq}}.
 }
 \author{
  Silvia von der Heyde

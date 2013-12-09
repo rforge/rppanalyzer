@@ -12,6 +12,9 @@
 \usepackage{times}
 \usepackage{comment}
 \usepackage{caption}
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 
 \textwidth=6.2in
 \textheight=9in
@@ -44,12 +47,14 @@
 \SweaveOpts{concordance=TRUE}
 %\doublespacing
 
-\title{RPPanalyzer {\small(Version 1.0.3!!!)}\\Analyze reverse phase protein array data\\[5mm]
+\title{RPPanalyzer {\small(Version 1.2)}\\Analyze reverse phase protein array data\\[5mm]
 User`s Guide \\}
 
-\author{Heiko Mannsperger and Stephan Gade\\
-German Cancer Research Center\\
-Heidelberg, Germany}
+\author{Heiko Mannsperger$^1$, Stephan Gade$^1$, Silvia von der Heyde$^2$ and Daniel Kaschek$^3$\\
+\small$^1$German Cancer Research Center, Heidelberg, Germany\\
+\small$^2$Medical Statistics, University Medical Center G"ottingen, Germany\\
+\small$^3$Institute of Physics, Freiburg University, Germany
+}
 
 \date{\today}
 \maketitle
@@ -92,8 +97,7 @@ benchwork to the software but to describe exactly what you have done in the lab.
 
 Every information concerning the samples has to be stored in a tab delimited
 text file and named \texttt{sampledescription.txt} (use spreadsheet software like MS Excel or OOo Spreadsheet to generate the table).
-The sample description file contains seven
-mandatory columns that are required to identify the samples (described in detail below) and optional columns holding
+The sample description file contains eight mandatory columns that are required to identify the samples (described in detail below) and optional columns holding
 any information describing the samples in more detail. To select sample groups for
 separate analysis it is of advantage to store every type of information in a separate
 column. To access example files load the RPPanalyzer package:
@@ -120,12 +124,12 @@ head(sampledescription)
 \subsubsection{Columns plate, row and column}
 
 These columns describe the location of the samples in the spotting source well plate.
-The column \Rfunarg{plate} contains the number of the source well plate stored as an integer (1, 2, 3...).
+The column \Rfunarg{plate} contains the number of the source well plate stored as an integer (1, 2, 3, ...).
 The Column \Rfunarg{row} contains capital letters (e.g. A-P) and the column \Rfunarg{column} integers (e.g 1-24) to identify the position within one source well plate.
 
 \subsubsection{Column sample\_type}
 
-The column \Rfunarg{sample\_type} holds information about the type of the appropriate sample. Entries ''measurement'' indicate an experimental measurement whereas ''control'' denotes spots for investigation of antibody binding dynamics. Accordingly ''neg\_control'' is reserved for control spots (e.g. BSA) which can be used to investigate unspecific binding. Finally, ''blank'' indicates empty spots (e.g. only buffer).
+The column \Rfunarg{sample\_type} holds information about the type of the appropriate sample. Entries `measurement' indicate an experimental measurement whereas `control' denotes spots for investigation of antibody binding dynamics. Accordingly `neg\_control' is reserved for control spots (e.g. BSA) which can be used to investigate unspecific binding. Finally, `blank' indicates empty spots (e.g. only buffer).
 
 \subsubsection{Column sample}
 
@@ -135,12 +139,12 @@ add more columns describing every experimental parameter.
 
 \subsubsection{Columns concentration, dilution and dilSeriesID}
 
-The column \Rfunarg{concentration} provides numeric data with information of the sample concentration. In case of serially diluted samples describe the dilution steps (starting with a $1$ for the highest concentration) in column \Rfunarg{dilution}. The column \Rfunarg{dilSeriesID} contains the values that should be used for dilution intercept correction via \Rfunction{correctDilinterc}, e.g. cell line names. It should have at least two distinct values which must be matchable in ''control'' and ''measurement''. NA values denote that control values should not be used.
+The column \Rfunarg{concentration} provides numeric data with information of the sample concentration. In case of serially diluted samples describe the dilution steps (starting with a $1$ for the highest concentration) in column \Rfunarg{dilution}. The column \Rfunarg{dilSeriesID} contains the values that should be used for dilution intercept correction via \Rfunction{correctDilinterc}, e.g. cell line names. It should have at least two distinct values which must be matchable in `control' and `measurement'. NA values denote that control values should not be used.
 
 \subsection{Slide description}
 
 Write all information describing the slides and arrays in a tab delimited text file and name it \texttt{slidedescription.txt}.
-Like in the \emph{sampledescription} file seven obligatory columns have to be provided and any optional column can be added.
+Seven obligatory columns have to be provided and any optional column can be added.
 
 <<loadSlides,echo=true,results=hide,eval=false>>=
 dataDir <- system.file("data",package="RPPanalyzer")
@@ -167,17 +171,36 @@ for the normalization method \Rfunarg{housekeeping}. In case of normalizing usin
 
 \subsubsection{Columns target and AB\_ID}
 
-In order to be able to assign the right proteins to the arrays the column \Rfunarg{target} holds the protein name and \Rfunarg{AB\_ID} the corresponding antibody ID. Please use only regular characters (letters, digits, ''\_'', and ''-'').
+In order to be able to assign the right proteins to the arrays the column \Rfunarg{target} holds the protein name and \Rfunarg{AB\_ID} the corresponding antibody ID. Please use only regular characters (letters, digits, `\_', and `-').
 
 \subsection{Image analysis result files}
 
 So far the software is restricted to read GenePix result files (\emph{gpr} files). For spot identification grid in the image analysis software (here\: GenePix) use the GenePix array list (\emph{gal} file) that is produced by the spotting device (e.g. Aushon 2470 or ArrayJet).
 
 
-\section{Read data}
+\section{Data pre-processing}
+Among all possible correction and normalization methods prior to actual data analysis, we recommend the correction based on serially diluted samples via \Rfunction{correctDilinterc}, combined with normalization according to total protein concentration via FCF. These important pre-processing steps are implemented in the \Rfunction{dataPreproc} function. It imports the raw data, corrects and normalizes it and generates plots for quality checks. 
+The function returns a list with four different elements. 
+The first element contains four raw data elements, i.e. expression and background matrices as well as data frames holding the array and sample description. 
+The second element is analogously built up but with foreground expression data corrected to dilution intercepts via the correctDilinterc() function. 
+In case of resulting negative values the absolute minimum plus one is added. 
+The third element is also structured like the first two but holds dilution intercept corrected and FCF normalized foreground data. 
+The last element defines the directory for storing the generated outputs.
+All output files are stored in a folder labelled with the date of analysis at the input files location.
+This also holds for the raw data, exported to a text file in table format.
+The integrated functions, which can also be applied separately, are explained in the following subsections.
+@
+For the usage of the \Rfunction{dataPreproc} function we want to refer to the help page which can be accessed with
+<<calculateSdcHelp,echo=true,results=hide,eval=false>>=
+?dataPreproc
+@
+
+\subsection{Read data}
 
 Change to the directory where your data files are stored. This can be done using
-the R working menu (File > change directory...) or by using the command \Rfunction{setwd}. Following a little example demonstrating the first steps.
+the R working menu (File > change directory...) or by using the command \Rfunction{setwd}. 
+For usage within \Rfunction{dataPreproc}, this is defined in the parameter \Rfunarg{dataDir}.
+Following a little example demonstrating the first steps.
 <<changedirectory,echo=true,results=hide,eval=false>>=
 dataDir <- system.file("data",package="RPPanalyzer")
 setwd(dataDir)
@@ -185,24 +208,119 @@ setwd(dataDir)
 
 The data analysis starts with reading the data from the current working directory.
 The argument \Rfunarg{blocksperarray} gives the number of blocks that are printed in one array.
+For usage within \Rfunction{dataPreproc}, this is defined in the parameter \Rfunarg{blocks}.
 This number is used to separate multiple arrays on one slide that are incubated individually.
-With the argument spotter the package takes in account the difference in the column ID which is
-used to identify the samples. To get information about the manually flagged spots, set
+With the argument \Rfunarg{spotter} the package takes in account the difference in the column ID which is used to identify the samples. To get information about the manually flagged spots, set
 the printFlags argument to \Rfunarg{TRUE} to export these flags to CSV file.
+For usage within \Rfunction{dataPreproc}, the spotter information has to be provided in the parameter \Rfunarg{spot}.
 
 <<readdata,echo=true,results=hide,eval=false>>=
 rawdata <- read.Data(blocksperarray = 4, spotter = "arrayjet", 
                      printFlags=FALSE)
 @
 
-After reading the RPPA data an R-object (list with four elements) is created. The first element
+After reading the RPPA data, an R-object (list with four elements) is created. The first element
 holds a matrix with the foreground (expression) intensity data, the second a matrix with background intensities.
 The columns of the matrix are representing the individual arrays described by the
 third element of the data list, a data frame holding the array information. The rows of the matrix are described by the fourth element holding the sample information.
 
+\subsection{Export data as text file}
+   
+It is possible to export the RPPA data set as tab delimited text file at any point 
+during data analysis for further inspection using spreadsheet software. The data will 
+be stored in two files, representing the expression and background or expression and 
+error, depending on the analysis step. The rows of the table will be annotated with sample
+information, the columns with array information.
 
-\section{Correct for background intensities}
+<<writeText,echo=true,results=hide,eval=false>>=
+write.Data(norm_data,FileNameExtension="test_data")
+@
 
+The text files will be stored in the current working directory.
+For usage within \Rfunction{dataPreproc}, the table is stored in the related analysis output folder.
+
+\subsection{Correct for background intensities}
+
+To correct for background signals, we recommend to apply the \Rfunction{correctDilinterc} function either directly or within the data pre-processing function \Rfunction{dataPreproc}. 
+It derives intercepts of dilution series in dependence of \Rfunarg{dilSeriesID}, defined in the \emph{sampledescription} file, as well as \Rfunarg{slide}, \Rfunarg{pad}, \Rfunarg{incubation\_run} and \Rfunarg{spotting\_run}, defined in the data frame holding the array information. 
+To apply this function, a dilution series of a representative sample has to be spotted on each slide in addition to the samples of interest. The latter are defined as `measurement' in the \texttt{sampledescription.txt}, while the serially diluted samples are defined as `control'. To link a sample of interest to the respective control dilution series, the same identifier has to be entered in the column \Rfunarg{dilSeriesID} of the \texttt{sampledescription.txt}. 
+A smoothing spline is used to extrapolate to zero. Nonparametric bootstrap is used to estimate uncertainty of the intercept estimate. Linear models are applied to the intercepts as response variables in dependence of diverse predictors, namely simply a constant, the antibody, antibody + slide or antibody + slide + sample (\Rfunarg{dilSeriesID}). Via Analysis of Variances (ANOVA) it is tested which model fits best. The estimated uncertainties of the intercepts are used as weights.
+The user should use the provided bar plot (`anovaIntercepts\_Output.pdf') of the residual sums of squares (RSS) to choose the model with the smallest RSS, favouring less complexity. For example, if the bars of model `antibody + slide' and `antibody + slide + sample' are the smallest and equally high, model `antibody + slide' should be preferred, as the sample does not provide additional information. The chosen model then is used to predict the intercepts which are subtracted from the original foreground expression.
+For usage within \Rfunction{dataPreproc}, the model information has to be provided in the parameter \Rfunarg{exportNo}. The default is set to four, i.e. the most complex model `antibody + slide + sample'.
+The function additionally generates plots of the dilution series and related intercept estimations (`getIntercepts\_Output.pdf')
+
+<<correctBackground,echo=true,results=hide,eval=false>>=
+data(dataII)
+write.Data(dataII)
+times<-read.delim("Datasample.medians.txt", skip=8, 
+                  stringsAsFactors=FALSE, row.names=NULL, header=TRUE,
+                  check.names=FALSE)
+# adapt data set for this example
+times<-times[which(times$sample!="cellline1"),]
+# workaround: add column 'dilSeriesID' which should actually be 
+# already defined in sampledescription.txt, but not for this data set 
+times[,"inhibition"]<-times$sample
+colnames(times)[which(colnames(times)=="inhibition")]<-"dilSeriesID"
+# do intercept correction
+correctedData <- correctDilinterc(
+  dilseries=times[which(times$"sample_type"=="control" 
+                        & !is.na(times$dilSeriesID)),],
+	arraydesc=dataII[[3]],
+	timeseries=times[which(times$sample_type=="measurement"),],
+  exportNo=4)
+@
+
+Further information on correction for background intensities is provided in later sections.
+
+\subsection{Data normalization with total protein dye}
+Within \Rfunction{dataPreproc}, the background corrected signal intensities are normalized spot-wise to the total protein concentration using the Fast Green FCF method \cite{Loebke:2007p612}. 
+In short, representative slides for one print run in an experiment are stained with the total protein dye `Fast Green FCF', determining the total protein content of single lysate spots. The target protein specific signal intensities are then corrected for technical variance by subtracting the logarthmized FCF intensities.
+In case of multiple arrays on one slide, the normalization is working array (pad) wise. That means each array is normalized by the corresponding array on the normalizer slide. The normalization method \Rfunarg{proteinDye} of \Rfunction{normalizeRPPA} requires one normalizer slide per print run and will be identified as `protein' in the \Rfunarg{target} column of the \emph{slidedescription} file. The function \Rfunction{normalizeRPPA} within \Rfunction{dataPreproc}, uses the method \Rfunarg{proteinDye} and returns normalized values in native scale (instead of $log_2$), setting the \Rfunarg{vals} attribute to `native'.
+Further information on normalization methods is provided in later sections.
+
+\subsection{Quality control plots}
+
+Signal validity and antibody dynamics can be checked by comparing the target specific signals to the corresponding blank value of the serially diluted control samples (column \Rfunarg{sample\_type} in the \emph{sampledesription} file).
+ For this function it is necessary to have one blank array (incubated only with secondary antibodies) for each incubation run (column \Rfunarg{incubation\_run} in the 
+\emph{slidedescription} file). We included an additional data set containing an
+experiment with siRNA transfected cell lines to demonstrate the plotting routines.
+
+<<loadHKdata,echo=true,results=hide,eval=false>>=
+## load data set
+load("HKdata.RData")
+data(HKdata)
+@
+
+<<plotQC,echo=true,results=hide,eval=false>>=
+plotQC(HKdata,file = "control_samples.pdf",arrays2rm = c("protein"))
+@
+
+Within \Rfunction{dataPreproc}, this function is applied to the raw signal intensities.
+
+Additionally you can plot the blank signals against the target signal of the measurements
+(column \Rfunarg{sample\_type} in the sample description file).
+
+<<plotmeasurements,echo=true,results=hide,eval=false>>=
+plotMeasurementsQC(HKdata,file = "control_measurements.pdf",
+                   arrays2rm = c("protein"))
+@  
+
+Within \Rfunction{dataPreproc}, this function is applied to the background corrected and FCF normalized signal intensities.
+
+To check the data distribution for each measured target you can generate a PDF file
+with a quantile-quantile plot. This can be done before and after normalization of the data.
+
+<<plotqq,echo=true,results=hide,eval=false>>=
+plotqq(HKdata,fileName = "qqplot_measurements.pdf")
+@
+
+Within \Rfunction{dataPreproc}, this function is applied to the background corrected and FCF normalized signal intensities.
+
+
+\section{Additional correction, quantification and normalization methods}
+In this section we introduce further data processing functions, apart from the recommended ones integrated in \Rfunction{dataPreproc}. Those may be appropriate in special situations.
+
+\subsection{Correct for background intensities}
 To correct for background signals, you can use all methods from the \Rfunction{backgroundcorrect}
 functions of the \emph{limma} package \citep{limma} or use the method \Rfunarg{addmin} which subtracts the local background and adds a small constant value to avoid negative signals.
 
@@ -210,12 +328,10 @@ functions of the \emph{limma} package \citep{limma} or use the method \Rfunarg{a
 dataBGcorrected <- correctBG(rawdata,method="normexp")
 @
 
-\section{Quantify concentration}
-
+\subsection{Quantify concentration}
 In case of serially diluted samples you have to calculate the (relative) concentration 
 of the samples. You can use either a linear model (function \Rfunction{calcLinear}) or a logistic three parameter model (function \Rfunction{calcLogistic}). We recommend to use the Serial Dilution Curve algorithm \cite{Zhang:2009p812} which is the most recent development and produces very robust concentration values (function \Rfunction{calcSdc}). Another possibility of quantification is the \emph{SuperCurve} package \citep{supercurve} which can be accessed using the wrapper function \Rfunction{calcSuperCurve}. 
 To use the  \Rfunction{calcSuperCurve} function you have to download and install the package from the MD Anderson Bioinformatics home page (\url{http://bioinformatics.mdanderson.org/Software/OOMPA/}).
-Another recommendable way is to apply the \Rfunction{correctDilinterc} function either directly or within the data preprocessing function \Rfunction{dataPreproc}. It derives intercepts of dilution series in dependence of \Rfunarg{dilSeriesID}, defined in the \emph{sampledescription} file, as well as \Rfunarg{slide}, \Rfunarg{pad}, \Rfunarg{incubation\_run} and \Rfunarg{spotting\_run}, defined in the data frame holding the array information. A smoothing spline is used to extrapolate to zero. Nonparametric bootstrap is used to estimate uncertainty of the intercept estimate. Linear models are applied to the intercepts as response variables in dependence of diverse predictors, namely simply a constant, the antibody, antibody + slide or antibody + slide + sample. Via Analysis of Variances (ANOVA) it is tested which model fits best. Finally the dilution intercept estimation is subtracted from the original foreground expression.
 
 <<calculateSdc,echo=true,results=hide,eval=false>>=
 ## To run the serial dilution curve algorithm it is neccessary
@@ -230,66 +346,30 @@ For the arguments of the \Rfunction{calcSdc} function we want to refer to the he
 <<calculateSdcHelp,echo=true,results=hide,eval=false>>=
 ?calcSdc
 @
-For the usage of the \Rfunction{correctDilinterc} function we recommend the data preprocessing function \Rfunction{dataPreproc}.
 
-\section{Quality control plots}
-
-Signal validity and antibody dynamics can be checked by comparing the target specific signals to the corresponding blank value of the serially diluted control samples (column \Rfunarg{sample\_type} in the \emph{sampledesription} file).
- For this function it is necessary to have one blank array (incubated 
-only with secondary antibodies) for each incubation run (column \Rfunarg{incubation\_run} in the 
-\emph{slidedescription} file). We included an additional data set containing an
-experiment with siRNA transfected cell lines to demonstrate the plotting routines.
-
-<<loadHKdata,echo=true,results=hide,eval=false>>=
-## load data set
-load("HKdata.RData")
-data(HKdata)
-@
-
-<<plotQC,echo=true,results=hide,eval=false>>=
-plotQC(HKdata,file = "control_samples.pdf",arrays2rm = c("protein"))
-@
-
-Additionally you can plot the blank signals against the target signal of the measurements
-(column \Rfunarg{sample\_type} in the sample description file).
-
-<<plotmeasurements,echo=true,results=hide,eval=false>>=
-plotMeasurementsQC(HKdata,file = "control_measurements.pdf",
-                   arrays2rm = c("protein"))
-@  
-
-To check the data distribution for each measured target you can generate a PDF file
-with a quantile-quantile plot. This can be done before and after normalization of the data.
-
-<<plotqq,echo=true,results=hide,eval=false>>=
-plotqq(HKdata,fileName = "qqplot_measurements.pdf")
-@
-
-\section{Data normalization}
-
+\subsection{Data normalization}
 Normalization is a crucial step in RPPA data analysis to ensure sample comparability and to yield 
 high quality data. The reference value to normalize RPPA is the total protein amount per spot.
 There are different possibilities to generate this reference value that will be described in detail below. 
 The following signal normalization steps can be applied directly to background corrected data if the samples are spotted in only one concentration. For serially diluted samples the normalization step is performed on the quantified data. Otherwise the information of the signal dynamics in one dilution series is lost.
 
-\subsection{Total protein dyes}
+\subsubsection{Total protein dyes}
 
 The most common method to normalize RPPA data is to stain one slide representative 
-for one print run with a total protein dye like Fast Green FCF (see also \cite{Loebke:2007p612})
-or Sypro Ruby or colloidal Gold (see also \cite{Spurrier:2008p934}). 
+for one print run with a total protein dye like Fast Green FCF (also integrated in \Rfunction{dataPreproc}) or Sypro Ruby or colloidal Gold (see also \cite{Spurrier:2008p934}). 
 
-After calculating the $log_2$ intensities the normalizer value can simply subtracted from the target signal to obtain the \emph{relative protein expression}. In case of multiple arrays on one slide  the normalization is working array wise (pad wise). That means each array is normalized by the corresponding array on the normalizer slide. The normalization method \Rfunarg{proteinDye} requires one normalizer slide per print run and will be identified as ''protein'' in the \Rfunarg{target} column of the \emph{slidedescription} file. If you want to obtain values in native scale (instead of $log_2$ scale) you have to change the \Rfunarg{vals} attribute to ''native''.
+After calculating the $log_2$ intensities the normalizer value can simply subtracted from the target signal to obtain the \emph{relative protein expression}. In case of multiple arrays on one slide  the normalization is working array wise (pad wise). That means each array is normalized by the corresponding array on the normalizer slide. The normalization method \Rfunarg{proteinDye} requires one normalizer slide per print run and will be identified as `protein' in the \Rfunarg{target} column of the \emph{slidedescription} file. If you want to obtain values in native scale (instead of $log_2$ scale) you have to change the \Rfunarg{vals} attribute to `native'.
 
 <<normalizeProtDye,echo=true,results=hide,eval=false>>=
 norm_values_pd <- normalizeRPPA(HKdata, method="proteinDye", 
                                 vals="logged")
 @
 
-\subsection{Housekeeping proteins}
+\subsubsection{Housekeeping proteins}
 Proteins that are expected to be expressed at a constant level, not effected by the 
 experimental conditions, can be used as housekeeping proteins for normalization. This
 method is established for quantitative Western blots and can be utilized to normalize RPPA. 
-To obtain the normalizer value, the mean of all arrays identified with the ''normalizer'' 
+To obtain the normalizer value, the mean of all arrays identified with the `normalizer' 
 attribute (column \Rfunarg{target} in the \emph{slidedescription} file) is calculated within one print run. 
 
 <<normalizeHK,echo=true,results=hide,eval=false>>=
@@ -308,17 +388,16 @@ norm_values_hk_sbs <- normalizeRPPA(HKdata,method="spotbyspot",
                              normalizer="housekeeping",vals="logged")
 @
 
-\subsection{Median normalization}
+\subsubsection{Median normalization}
 
-Assuming that all proteins measured in the RPPA experiment are reflecting the total protein amount this can be used
-as a normalizer value. The median value of all protein signals of each spot or sample is calculated and used as normalizer signal. 
+Assuming that all proteins measured in the RPPA experiment are reflecting the total protein amount this can be used as a normalizer value. The median value of all protein signals of each spot or sample is calculated and used as normalizer signal. 
 
 <<normalizeMedian,echo=true,results=hide,eval=false>>=
 norm_values_row <- normalizeRPPA(HKdata,method="row")
 @ 
 
   
-\subsection{Protein quantification assays}
+\subsubsection{Protein quantification assays}
 
 The method \Rfunarg{extValue} provides the possibility to utilize protein concentration values 
 determined with protein quantification assays (e.g. Bradford, BCA) as normalizer value. 
@@ -338,28 +417,6 @@ norm_values_eV <- normalizeRPPA(HKdata,method="extValue",
 ## normalization:
 norm_data <- sample.median(norm_values_pd)
 @
-
-\section{Data preprocessing}
-Among all possible correction and normalization methods prior to actual data analysis, we recommend the correction based on serially diluted samples via \Rfunction{correctDilinterc}, combined with normalization according to total protein concentration via FCF. These important preprocessing steps are implemented in the \Rfunction{dataPreproc} function. It imports the raw data, corrects and normalizes it and generates plots for quality checks.
-@
-For the usage of the \Rfunction{dataPreproc} function we want to refer to the help page which can be accessed with
-<<calculateSdcHelp,echo=true,results=hide,eval=false>>=
-?dataPreproc
-@
-
-\section{Export data as text file}
-   
-It is possible to export the RPPA data set as tab delimited text file at any point 
-during data analysis for further inspection using spreadsheet software. The data will 
-be stored in two files, representing the expression and background or expression and 
-error, depending on the analysis step. The rows of the table will be annotated with sample
-information, the columns with array information.
-
-<<writeText,echo=true,results=hide,eval=false>>=
-write.Data(norm_data,FileNameExtension="test_data")
-@
-
-The text files will be stored in the current working directory.
 
 \section{Array and data selection}
 
@@ -390,7 +447,7 @@ the biological relevance of the data set.
 
 RPPAs allow the measurement of the phosporylation status of proteins. Therefore they capacitate, in contrast to mRNA based techniques, to investigate signaling pathways in a time resolved manner. Such time course experiments can be visualized with the plotTimeCourse function.
 
-The function will generate a PDF in the current working directory. The argument \Rfunarg{tc.identifier} combines the sample attributes which will identify the individual time course experiments whereas the \Rfunarg{plot.split} argument will be used to define which time course experiments will be plotted in one graph. The argument \Rfunarg{plotformat} defines the way the data will be plotted: ''rawdata'' will plot the time points connected with dashed lines, ''splines'' will plot a smoothed spline calculated using the package \emph{gam} \citep{gam}. To plot both set \Rfunarg{plotformat} to ''both''.
+The function will generate a PDF in the current working directory. The argument \Rfunarg{tc.identifier} combines the sample attributes which will identify the individual time course experiments whereas the \Rfunarg{plot.split} argument will be used to define which time course experiments will be plotted in one graph. The argument \Rfunarg{plotformat} defines the way the data will be plotted: `rawdata' will plot the time points connected with dashed lines, `splines' will plot a smoothed spline calculated using the package \emph{gam} \citep{gam}. To plot both set \Rfunarg{plotformat} to `both'.
 
 <<plotTC,echo=true,results=hide,eval=false>>=
 ## load a time course data set
@@ -450,6 +507,7 @@ test.correlation(cl.data,
 \subsection{Heatmaps}
 
 A common method to present high dimensional biological data are heatmaps. The RPPanalyzer provides a function to plot heatmaps annotated with any sample attribute in order to check if the sample attribute corresponds to the clustering. Thereby the parameter \Rfunarg{sampledesription} defines which information is used for grouping the samples. To ensure a stable and meaningful clustering removing control arrays and arrays of bad quality is recommended preceding step.
+It is recommended to apply the \Rfunction{logList} function to the data before plotting to logarithmize ($log_2$) the first two RPPA list elements, i.e. foreground and background signal intensities.
 
 <<heatmap,echo=true,results=hide,eval=false>>=
 ## remove some arrays
@@ -457,7 +515,7 @@ sel.data <- remove.arrays(cl.data,param="target",
             arrays2rm=c("target10","target2","target21","target22",
             "target28","target33","target36","target38","target61",
             "target47","target13","target19"))
-rppaList2Heatmap(sel.data,
+rppaList2Heatmap(logList(sel.data),
       sampledescription = "sample",side.color = "tissue",
       remove = c("blank", "protein", "Abmix"), distance = "euclidean",
       dendros = "both", cutoff = 0.005, fileName = "Heatmap.pdf",

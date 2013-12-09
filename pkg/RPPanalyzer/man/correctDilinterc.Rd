@@ -42,7 +42,7 @@ library(RPPanalyzer)
 data(dataII)
 write.Data(dataII)
 times<-read.delim("Datasample.medians.txt", skip=8, stringsAsFactors=FALSE,
- row.names=NULL,header=TRUE, ,check.names=FALSE)
+ row.names=NULL,header=TRUE, check.names=FALSE)
 # adapt data set for this example
 times<-times[which(times$sample!="cellline1"),]
 # workaround: add column 'dilSeriesID' which should actually 
