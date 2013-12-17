@@ -54,9 +54,9 @@ dataPreproc<-function(dataDir=getwd(), blocks=12, spot="aushon", exportNo=4){
   }
   
   cordat<-list()
-  cordat[[1]]<-normdatFC[,colnames(arrayDesc)]
+  cordat[[1]]<-as.matrix(normdatFC[,colnames(arrayDesc)])
   #dummy matrix, BG neglectible --> not corrected for intercepts
-  cordat[[2]]<-bgRaw[which(bgRaw$sample_type=="measurement"),colnames(cordat[[1]])] 
+  cordat[[2]]<-as.matrix(bgRaw[which(bgRaw$sample_type=="measurement"),colnames(cordat[[1]])])
   cordat[[3]]<-rawdat$arraydescription[,colnames(cordat[[1]])]
   cordat[[4]]<-rawdat$sampledescription
   if(length(fgNAVec)>0){
