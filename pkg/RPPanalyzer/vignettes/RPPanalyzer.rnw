@@ -109,7 +109,7 @@ is included.
 
 <<loadSD,echo=true,results=hide,eval=false>>=
 ## define path to example files
-dataDir <- system.file("data",package="RPPanalyzer")
+dataDir <- system.file("extdata",package="RPPanalyzer")
 ## change working directory
 setwd(dataDir)
 ## store example sample description in a variable
@@ -145,7 +145,7 @@ Write all information describing the slides and arrays in a tab delimited text f
 Seven obligatory columns have to be provided and any optional column can be added.
 
 <<loadSlides,echo=true,results=hide,eval=false>>=
-dataDir <- system.file("data",package="RPPanalyzer")
+dataDir <- system.file("extdata",package="RPPanalyzer")
 setwd(dataDir)
 ## store example slide description in a variable
 slidedescription <- read.delim("slidedescription.txt")
@@ -194,7 +194,7 @@ For the usage of the \Rfunction{dataPreproc} function we want to refer to the he
 @
 <<dataPreprocEx,echo=true,results=hide,eval=false>>=
 ## example call
-dataDir <- system.file("data",package="RPPanalyzer")
+dataDir <- system.file("extdata",package="RPPanalyzer")
 preprocessedData <- dataPreproc(dataDir=dataDir,blocks=12,
                                 spot="aushon",exportNo=2)
 @
@@ -350,7 +350,6 @@ ser.dil_median <- sample.median(ser.dil.samples)
 ## calculate concentration (for the attributes see help pages)
 c_Values <- calcSdc(ser.dil_median,D0=2,sel=c("measurement"), 
                     dilution="dilution")
-
 @
 For the arguments of the \Rfunction{calcSdc} function we want to refer to the help page which can be accessed with
 <<calculateSdcHelp,echo=true,results=hide,eval=false>>=
