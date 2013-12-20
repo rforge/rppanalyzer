@@ -110,7 +110,7 @@
 \examples{
 \dontrun{
 ## pre-process the data
-dataDir <- system.file("data",package="RPPanalyzer")
+dataDir <- system.file("extdata",package="RPPanalyzer")
 res <- dataPreproc(dataDir=dataDir,blocks=12,spot="aushon",exportNo=2)
 ## remove arrays
 normdat_rm <- remove.arrays(res$normdat,param="target",arrays2rm=c("protein","blank"))

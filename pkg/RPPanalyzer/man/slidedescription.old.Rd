@@ -1,5 +1,5 @@
-\name{slidedescription.txt}
-\alias{slidedescription.txt}
+\name{slidedescription.old}
+\alias{slidedescription.old}
 \docType{data}
 \title{ slide description file}
 \description{
@@ -29,8 +29,8 @@
 }
 \source{
 
- The data set contains the incubation data from reverse phase protein arrays for 
- the HGF data set. These are 3 sample slides plus one slide for FCF normalization.
+ The data set contains the incubation data from reverse phase protein arrays
+ with randomized feature data.
 }
 
 \keyword{datasets}
