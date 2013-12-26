@@ -7,7 +7,13 @@
     plotTimeCourseII creates multiplot rectangular PDF files for time course datasets. Page layout (number of plots per page, arrangement of plots) and plot layout can be customized within the function.  
 }
 \usage{
-    plotTimeCourseII(x,plotgroup="",filename="timeseries_multiplot.pdf",numpage=4,cols=2,xname="time",yname="signal",legpos="top",legrow=2,legtitle="treatment",legtitlepos="top",legtextsize=10,legtextcolor="black",legtitlesize=10,legtitlecolor="black",legtitleface="bold",legitemsize=1,plottitlesize=12,plottitleface="bold",xaxissize=10,yaxissize=10,xaxisface="bold",yaxisface="bold",xaxistextsize=8,xaxistextangle=0,yaxistextsize=8,linecolor="Set1")
+    plotTimeCourseII(x,plotgroup="",filename="timeseries_multiplot.pdf",numpage=4,
+	cols=2,xname="time",yname="signal",legpos="top",legrow=2,legtitle="treatment",
+	legtitlepos="top",legtextsize=10,legtextcolor="black",legtitlesize=10,
+	legtitlecolor="black",legtitleface="bold",legitemsize=1,plottitlesize=12,
+	plottitleface="bold",xaxissize=10,yaxissize=10,xaxisface="bold",
+	yaxisface="bold",xaxistextsize=8,xaxistextangle=0,yaxistextsize=8,
+	linecolor="Set1")
 }
 \arguments{
     \item{x}{
@@ -122,9 +128,12 @@ dataexpression_1 <- read.table("HGF_sample_data_A549expression.txt")
 ## use getErrorModel function
 dataexpression_2 <- getErrorModel(dataexpression_1,verbose=FALSE)
 ## use averageData function
-dataexpression_3 <- averageData(dataexpression_2,scaling=c("slide","replicate"),distinguish=c("cell_line","treatment"))
+dataexpression_3 <- 
+averageData(dataexpression_2,scaling=c("slide","replicate"),
+  distinguish=c("cell_line","treatment"))
 ## plot time course data
-plotTimeCourseII(dataexpression_3,filename="timecourse_HGF_sample_data_A549.pdf",legpos="top",xname="time [min]",yname="signal [a.u.]",
+plotTimeCourseII(dataexpression_3,filename="timecourse_HGF_sample_data_A549.pdf",
+legpos="top",xname="time [min]",yname="signal [a.u.]",
 linecolor=c("red","green","blue","black","orange","grey"))
 }
 }

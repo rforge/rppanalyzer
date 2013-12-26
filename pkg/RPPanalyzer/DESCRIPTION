@@ -2,12 +2,12 @@ Package: RPPanalyzer
 Type: Package
 Title: Reads, annotates, and normalizes reverse phase protein array
         data
-Version: 1.2
+Version: 1.2.1
 Date: 2011-08-02
 Author: Heiko Mannsperger with contributions of Stephan Gade
 Maintainer: Christian Bender <christian.bender@tron-mainz.de>
 Depends: R (>= 2.14)
-Imports: lattice, limma, gam, Hmisc, gplots, gdata, quantreg, stats4, grid, ggplot2
+Imports: quantreg, limma, lattice, stats4, gam, gplots, grid, ggplot2, Hmisc, Biobase
 Enhances: SuperCurve (>= 1.3.3)
 ZipData: no
 Description: Reads in sampledescription and slidedescription files and
