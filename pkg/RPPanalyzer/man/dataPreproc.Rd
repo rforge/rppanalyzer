@@ -43,7 +43,8 @@ Finally, three pdf files for quality checking are returned.
 library(RPPanalyzer)
   
 # get output list 
-res<-dataPreproc(dataDir=getwd(), blocks=12, spot="aushon", exportNo=4)
+dataDir<-system.file("extdata",package="RPPanalyzer")
+res<-dataPreproc(dataDir=dataDir, blocks=12, spot="aushon", exportNo=4)
 
 # get individual elements
 # raw data
