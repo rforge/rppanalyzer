@@ -346,7 +346,7 @@ dataBGcorrected <- correctBG(HKdata,method="normexp")
 
 \subsection{Quantify concentration}
 In case of serially diluted samples you have to calculate the (relative) concentration 
-of the samples. You can use either a linear model (function \Rfunction{calcLinear}) or a logistic three parameter model (function \Rfunction{calcLogistic}). We recommend to use the Serial Dilution Curve algorithm \citep{Zhang:2009p812} which is the most recent development and produces very robust concentration values (function \Rfunction{calcSdc}). Another possibility of quantification is the \emph{SuperCurve} package \citep{supercurve} which can be accessed using the wrapper function \Rfunction{calcSuperCurve}. 
+of the samples. You can use either a linear model (function \Rfunction{calcLinear}) or a logistic three parameter model (function \Rfunction{calcLogistic}). We recommend to use the Serial Dilution Curve algorithm \citep{Zhang:2009p812} which is the most recent development and produces very robust concentration values (function \Rfunction{calcSdc}). Another possibility of quantification is the \emph{SuperCurve} package \citep{supercurve} which can be accessed using the wrapper function \Rfunction{calcSuperCurve}. This function is not part of the RPPanalyzer package, but can be found in the appendix of this vignette.  
 To use the  \Rfunction{calcSuperCurve} function you have to download and install the package from the MD Anderson Bioinformatics home page (\url{http://bioinformatics.mdanderson.org/Software/OOMPA/}).
 
 <<calculateMedians,echo=true,results=hide,eval=false>>=
@@ -586,6 +586,258 @@ dataIII_median <- sample.median(dataIII)
 ## plot heatmap
 rppaList2Heatmap(dataIII_median)
 @
+
+\section{Appendix}
+
+This appendix contains the source code to the Super Curve functionality. If one wants to use this, just paste the functions below into your R-script, load the RPPanalyzer package and go on.
+
+\begin{verbatim}
+#'
+#' calcSuperCurve.R
+#'
+#' Uses the package SuperCurve to perform the quantification
+#'
+
+
+#'
+#' calcSuperCurve
+#' uses the package SuperCurve for quantification
+#' 
+calcSuperCurve <- function(x,model="cobs", method="nlrq", sample.id=c("sample","sample.n"),sel=c("measurement","control"), 
+dilution="dilution", block.design, plot=T) {
+
+    # at first use create.ID.col to create unique identifiers   
+    xi <- create.ID.col(x,sample.id=sample.id)
+
+    # get only the real measurements, don't fit blank spots and buffer
+    xi <- select.sample.group(xi,params=list("sample_type"=sel))
+
+    # get the unique IDs
+    id <- unique(as.character(xi[[4]]$identifier))
+
+    # create a matrix of the fittet relative expression values
+    # since we do a fit for every array the no. of columns is equal to 
+	# the no. of columns of the raw expression matrix
+    # the no. of rows is equal to the length of unique(id)
+    vals <- matrix(NA, ncol=ncol(xi[[1]]), nrow=length(id))
+    colnames(vals) <- colnames(xi[[1]])
+    rownames(vals) <- id
+
+    # iterate over all arrays and get an individual fit
+    # this is the main loop
+    for(i in 1:ncol(xi[[1]])) {
+
+        cat("Fit SuperCurve model for array:", xi[[3]]["target",i], "\n")
+        cat("SuperCurve model:", model, "\n")
+        cat("SuperCurve fit method:", method, "\n")
+
+        # create an RPPA object
+        rppa <- createRPPAObject(xi, i, block.design) 
+
+        # create an RPPA Design Object
+        rppaDesign <- createRPPDesignObject(rppa, xi, dilution)
+
+        # do the fit
+        fit <- RPPAFit(rppa=rppa, design=rppaDesign, measure="Mean.Net",
+		model=model, method=method) 
+        #fit <- try(do.call("RPPAFit", args=list(rppa=rppa, design=rppaDesign,
+		#measure="Mean.net", model=model, method=method)))
+
+        #if(inherits(fit,"try-error"))  {
+
+		#stop("This function requires the package SuperCurve. 
+		#Please install it 
+		#from 'http://bioinformatics.mdanderson.org/Software/OOMPA/'.")
+
+        #}
+
+
+        # plot the fit if wanted
+        if(plot) {
+
+            main=c(paste("Target:",xi[[3]]["target",i]), 
+			paste("Antibody:", xi[[3]]["AB_ID",i]), paste("Model:", model))
+
+            plot(fit, main=main)
+
+        }
+
+        # order the results according to our sampledescription
+        conc <- as.numeric(fit@concentrations)
+        m <- match(rownames(vals), names(fit@concentrations), nomatch=0)
+        if(any(m==0)) {
+            stop("For some samples there was no model fit. Something went wrong!")
+        }
+
+        conc <- conc[m]
+    
+        vals[,i] <- conc
+
+        cat("Finished!\n\n")
+ 
+    }
+
+
+    # get only these entries from each dilution series with the highest concentration
+    # we will need the sampledescription of this
+    tempDat <- pick.high.conc(xi,sample.id = sample.id)
+
+    # pick the lines of the sample description matching to our fitted values
+    m <- match(rownames(vals), tempDat[[4]]$identifier)
+    # discarding columns like concentration, dilution, Block, etc.
+    # these information don't make sense any longer
+    n <- colnames(tempDat[[4]]) %in% c("concentration", "dilution", 
+									"Block", "Column", "Row")
+    sampleDesc <- tempDat[[4]][m,!n]
+
+    # set rownames of vals to the sample IDs
+    rownames(vals) <- sampleDesc$ID
+
+    # assemble new RPPA data list for return
+    ret <- tempDat
+    ret[[1]] <- vals
+    ret[[2]] <- vals
+    ret[[4]] <- sampleDesc
+
+    # set new names
+    namesRet <- names(ret)
+    namesRet[1] <- "expression"
+    namesRet[2] <- "dummy"
+    names(ret) <- namesRet
+
+    # return the result
+    return(ret)
+
+}
+
+#'
+#' createRPPAObject
+#'
+#' creates an RPPA object used in SuperCurve
+#' @param x: the RPPA data list
+#' @param arrayIdx: the index of the array, the RPPA object is created
+#'
+createRPPAObject <- function(x, arrayIdx, block.design) {
+
+    # the bg corrected expression values of the samples
+    # of the specified array
+    Mean.Net <- x[[1]][,arrayIdx]
+
+    # the names of the samples
+    Sample <- x[[4]][,"identifier"]
+
+    # now we calculate the main row and the main col
+    # we use this terms to determine the rows and cols of the clocks
+    # note: the blocks are ordered rowwise, e.g 16 blocks
+    #  1  2  3  4
+    #  5  6  7  8
+    #  9 10 11 12
+    # 13 14 15 16
+
+    # first the Main.Row, it can be expressed as
+    # (block-1) div (number of cols in the blockdesign) + 1
+    Main.Row <- ((x[[4]][,"Block"]-1) %/% block.design[2]) + 1
+
+    # second the columns which can be expressed as
+    # (block-1) mod (number of cols in the blockdesign) + 1
+    Main.Col <- ((x[[4]][,"Block"]-1) %% block.design[2]) + 1
+    
+    # now we can copy our Col and Row information as Sub.Col and Sub.Row
+    Sub.Row <- x[[4]][,"Row"]
+    Sub.Col <- x[[4]][,"Column"]
+
+
+    # finally create data.frame
+    data <- data.frame(Main.Row=Main.Row, Main.Col=Main.Col, 
+			Sub.Row=Sub.Row, Sub.Col=Sub.Col, Sample=Sample, 
+			Mean.Net=Mean.Net)
+
+
+    # now define the file and the antibody atribute of the RPPA object
+    file <- x[[3]]["gpr",arrayIdx]
+    antibody <- x[[3]]["target",arrayIdx]
+
+    # return the new created class RPPA
+    return(new("RPPA", data=data, file=file, antibody=antibody))
+    
+}
+
+\end{verbatim}
+
+And here is the Rd source for the calcSuperCurve function:
+
+\begin{verbatim}
+\name{calcSuperCurve}
+\alias{calcSuperCurve}
+
+\title{ Calculates the concentration of serial diluted samples}
+
+\description{
+Calculates the protein concentration of a serial diluted sample 
+stored in an RPPA data list using quantification methods implemented 
+in the SuperCurve package (Coombes et. al, 2009). 
+}
+
+\usage{
+calcSuperCurve(x,model="cobs", method="nlrq",
+	sample.id=c("sample","sample.n"),sel=c("measurement","control"),
+	dilution="dilution", block.design, plot=T)
+}
+
+\arguments{
+  \item{x}{RPPA data list with replicates aggregated with median }
+  \item{model}{The model used by the SuperCurve package. Has to 
+  be either "cobs", "logistic" or "loess".}
+  \item{method}{The method used for fitting the model. Has to be 
+  "nlrq", "nlrob" or "nls".}
+  \item{sample.id}{Attributes to identify the samples}
+  \item{sel}{The sample type that should be calculated. Has to be 
+  "measurements","control", "neg_control",or "blank".}
+  \item{dilution}{Name of the column in the feature data matrix 
+  describing the dilution steps of the samples.}
+  \item{block.design}{Vector with two elements. Describes how the blocks 
+  are arranged on the array. The first element specifies the number of 
+  rows, the second the number of columns. The blocks are supposed to be 
+  arranged row by row in the grid.}
+  \item{plot}{Logical. If true, model fits are plotted }
+}
+
+\details{
+This method is wrapper function to give the user access to the 
+quantification methods implemented in the SuperCurve package. The 
+package can be installed from 
+\url{http://bioinformatics.mdanderson.org/Software/OOMPA/}.
+}
+
+\value{
+
+  \item{expression}{matrix with expression values}
+  \item{error}{matrix with error values}
+  \item{arraydescription}{data frame with feature data}
+  \item{sampledescription}{data frame with pheno data}
+}
+
+\references{Coombes et. al, 2009, SuperCurve: SuperCurve Package
+
+Hu et al., Bioinformatics 2007, 
+Non-parametric quantification of protein lysate arrays
+}
+
+\author{Stephan Gade <s.gade@dkfz.de> }
+\examples{
+\dontrun{
+library(RPPanalyzer)
+data(ser.dil.samples)
+}
+
+\dontrun{
+predicted.data <- calcSuperCurve(ser.dil.samples, sel=c("measurement"), 
+block.design=c(1,4))}
+
+}
+\keyword{ manip }
+
+\end{verbatim}
 
 \bibliographystyle{abbrvnat}
 \bibliography{papers_RPPanalyzer}

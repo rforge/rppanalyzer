@@ -1,5 +1,5 @@
-import(quantreg,limma,lattice,stats4,gam,gplots,grid,ggplot2,SuperCurve)
+import(quantreg,limma,lattice,stats4,gam,gplots,grid,ggplot2)
 importFrom( Hmisc, errbar )
 importFrom( Biobase, AnnotatedDataFrame )
 
-export(calcLinear,calcLogistic,calcSdc,calcSuperCurve,correctBG,normalizeRPPA,pick.high.conc,plotMeasurementsQC,plotQC,plotTimeCourse,plotqq,read.Data,test.correlation,remove.arrays,rppa2boxplot,rppaList2ExpressionSet,rppaList2Heatmap,sample.median,select.measurements,select.sample.group,write.Data,correctDilinterc,simpleBoxplot,averageData,getErrorModel,dataPreproc,logList,plotTimeCourseII)
+export(calcLinear,calcLogistic,calcSdc,correctBG,normalizeRPPA,pick.high.conc,plotMeasurementsQC,plotQC,plotTimeCourse,plotqq,read.Data,test.correlation,remove.arrays,rppa2boxplot,rppaList2ExpressionSet,rppaList2Heatmap,sample.median,select.measurements,select.sample.group,write.Data,correctDilinterc,simpleBoxplot,averageData,getErrorModel,dataPreproc,logList,plotTimeCourseII)
