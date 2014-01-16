@@ -129,9 +129,12 @@ dataexpression_1 <- read.table("HGF_sample_data_A549expression.txt")
 dataexpression_2 <- getErrorModel(dataexpression_1, verbose=FALSE)
 # use averageData function
 dataexpression_3 <- 
-averageData(dataexpression_2, scaling=c("slide","replicate"), distinguish=c("cell_line","treatment"))
+averageData(dataexpression_2, scaling=c("slide","replicate"),\cr
+distinguish=c("cell_line","treatment"))
 # plot time course data
-plotTimeCourseII(dataexpression_3, filename="timecourse_HGF_sample_data_A549.pdf", legpos="top", xname="time [min]", yname="signal [a.u.]", linecolor=c("red","green","blue","black","orange","grey"))
+plotTimeCourseII(dataexpression_3,\cr
+filename="timecourse_HGF_sample_data_A549.pdf", legpos="top", xname="time [min]",\cr
+yname="signal [a.u.]", linecolor=c("red","green","blue","black","orange","grey"))
 }
 }
 \keyword{file}

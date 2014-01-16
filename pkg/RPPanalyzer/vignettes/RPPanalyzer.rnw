@@ -182,7 +182,8 @@ Among all possible correction and normalization methods prior to the actual data
 These important pre-processing steps are implemented in the \Rfunction{dataPreproc} function. It imports the raw data, corrects and normalizes it and generates plots for quality checks. 
 The function returns a list with four different elements. 
 The first element contains four raw data elements, i.e. foreground and background expression matrices as well as data frames holding the array and sample description. 
-The second element is analogously built up but with foreground expression data corrected to dilution intercepts via the \Rfunction{correctDilinterc} function. 
+The second element is analogously built up but with foreground expression data corrected to dilution intercepts via the \Rfunction{correctDilinterc} function. Therefore the default input parameter \Rfunarg{correct} must stay `both'. In case of `none', the measurements stay as in rawdat.
+In case of `noFCF', the FCF measurements stay as in rawdat.\\
 In case of resulting negative values the absolute minimum plus one is added. 
 The third element is also structured like the first two but holds dilution intercept corrected and FCF normalized foreground data. 
 The last element defines the directory for storing the generated outputs.
@@ -199,7 +200,7 @@ dataDir <- system.file("extdata",package="RPPanalyzer")
 setwd(dataDir)
 ## pre-process data
 preprocessedData <- dataPreproc(dataDir=dataDir,blocks=12,
-                                spot="aushon",exportNo=2)
+                                spot="aushon",exportNo=2,correct="both")
 @
 
 \subsection{Read data}

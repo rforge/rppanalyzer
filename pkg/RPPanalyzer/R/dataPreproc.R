@@ -1,4 +1,4 @@
-dataPreproc<-function(dataDir=getwd(), blocks=12, spot="aushon", exportNo=4){
+dataPreproc<-function(dataDir=getwd(), blocks=12, spot="aushon", exportNo=4, correct="both"){
                    
   ################################################################################
   # 1. Import and convert raw data from ".gpr"-files, slide- & sampledescription #
@@ -41,30 +41,47 @@ dataPreproc<-function(dataDir=getwd(), blocks=12, spot="aushon", exportNo=4){
   # 2. FOLD CHANGE calculation according to correctDilinterc #
   ############################################################
   
-  # split raw data (fgRaw) into dilution data (dilData) and measurement data to be normalized
-  dilData <- fgRaw[which(fgRaw$sample_type=="control" & !is.na(fgRaw$dilSeriesID)),]
-
-  # adapt signal intensities via subtraction of dilution intercept at concentration 0
-  normdatFC<-correctDilinterc(dilseries=dilData, arraydesc=arrayDesc, timeseries=fgRaw[which(fgRaw$sample_type=="measurement"),], 
-                              exportNo=exportNo)
-
-  # correct data values for negative ones
-  if(min(normdatFC[,colnames(arrayDesc)])<0){
-    normdatFC[,colnames(arrayDesc)]<-normdatFC[,colnames(arrayDesc)]+abs(min(normdatFC[,colnames(arrayDesc)]))+1
+  if(correct!="none"){ # correct intercepts for targets (and FCF)
+    
+    # split raw data (fgRaw) into dilution data (dilData) and measurement data to be normalized
+    dilData <- fgRaw[which(fgRaw$sample_type=="control" & !is.na(fgRaw$dilSeriesID)),]
+    
+    # adapt signal intensities via subtraction of dilution intercept at concentration 0
+    normdatFC<-correctDilinterc(dilseries=dilData, arraydesc=arrayDesc, timeseries=fgRaw[which(fgRaw$sample_type=="measurement"),], 
+                                exportNo=exportNo)
+    
+    # correct data values for negative ones
+    if(min(normdatFC[,colnames(arrayDesc)])<0){
+      normdatFC[,colnames(arrayDesc)]<-normdatFC[,colnames(arrayDesc)]+abs(min(normdatFC[,colnames(arrayDesc)]))+1
+    }
+    
+    # get FCF columns
+    fcfCol<-colnames(arrayDesc)[grep("protein",arrayDesc["target",])]
+    
+    # print warning, if FCF intercept > 50% FCF signal
+    fcfInterc<-fgRaw[which(fgRaw$sample_type=="measurement"),fcfCol]-normdatFC[,fcfCol]
+    if(any(fcfInterc > 0.5*fgRaw[which(fgRaw$sample_type=="measurement"),fcfCol])){
+      cat("warning: FCF correction factor exceeds 50% of FCF signal\n")
+    }
+    
+    if(correct=="noFCF"){ # reset old FCF values
+      normdatFC[,fcfCol]<-fgRaw[which(fgRaw$sample_type=="measurement"),fcfCol]
+    }
+    cordat<-list()
+    cordat[[1]]<-as.matrix(normdatFC[,colnames(arrayDesc)])
+    #dummy matrix, BG neglectible --> not corrected for intercepts
+    cordat[[2]]<-as.matrix(bgRaw[which(bgRaw$sample_type=="measurement"),colnames(cordat[[1]])])
+    cordat[[3]]<-rawdat$arraydescription[,colnames(cordat[[1]])]
+    cordat[[4]]<-rawdat$sampledescription
+    if(length(fgNAVec)>0){
+      cordat[[4]]<-rawdat$sampledescription[-fgNAVec,]
+    }
+    cordat[[4]]<-cordat[[4]][which(cordat[[4]]$sample_type=="measurement"),]
+    names(cordat)<-names(rawdat)
+  }else{ # do not use intercept correction at all
+    cordat<-rawdat
   }
   
-  cordat<-list()
-  cordat[[1]]<-as.matrix(normdatFC[,colnames(arrayDesc)])
-  #dummy matrix, BG neglectible --> not corrected for intercepts
-  cordat[[2]]<-as.matrix(bgRaw[which(bgRaw$sample_type=="measurement"),colnames(cordat[[1]])])
-  cordat[[3]]<-rawdat$arraydescription[,colnames(cordat[[1]])]
-  cordat[[4]]<-rawdat$sampledescription
-  if(length(fgNAVec)>0){
-    cordat[[4]]<-rawdat$sampledescription[-fgNAVec,]
-  }
-  cordat[[4]]<-cordat[[4]][which(cordat[[4]]$sample_type=="measurement"),]
-  names(cordat)<-names(rawdat)
-
   
   ########################
   # 3. FCF normalization #

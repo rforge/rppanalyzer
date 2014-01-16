@@ -1,4 +1,4 @@
-import(quantreg,limma,lattice,stats4,gam,gplots,grid,ggplot2)
+import(quantreg,limma,lattice,stats4,gam,gplots,grid,ggplot2,SuperCurve)
 importFrom( Hmisc, errbar )
 importFrom( Biobase, AnnotatedDataFrame )
 
