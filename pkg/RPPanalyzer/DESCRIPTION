@@ -9,10 +9,10 @@ Maintainer: Christian Bender <christian.bender@tron-mainz.de>
 Depends: R (>= 2.14)
 Imports: quantreg, limma, lattice, stats4, gam, gplots, grid, ggplot2, Hmisc, Biobase
 ZipData: no
-Description: Reads in sampledescription and slidedescription files and
+Description: Reads in sample description and slide description files and
         annotates the expression values taken from gpr files. After
-        Normalization data can be presented in boxplots, heatmaps or
-        dotplots.
+        normalization data can be visualized as boxplot, heatmap or
+        dotplot.
 License: LGPL
 LazyLoad: yes
 Packaged: 2011-08-02 09:10:10 UTC; mannsper
