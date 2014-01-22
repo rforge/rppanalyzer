@@ -140,10 +140,12 @@ function(blocksperarray=4,spotter="arrayjet",...){
     colnames (flags) <- arrays
     
     idx<-which(id=="-")
-    forg<-forg[-idx,]
-    backg<-backg[-idx,]
-    flags<-flags[-idx,]
-    localization<-localization[-idx,]
+    if(length(idx)>0){
+      forg<-forg[-idx,]
+      backg<-backg[-idx,]
+      flags<-flags[-idx,]
+      localization<-localization[-idx,]
+    }
 
     ## store matrixes in list
     vals <- list(expression=forg, background=backg,Flags=flags, localization=localization)
