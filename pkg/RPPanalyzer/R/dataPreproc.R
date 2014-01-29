@@ -1,4 +1,4 @@
-dataPreproc<-function(dataDir=getwd(), blocks=12, spot="aushon", exportNo=4, correct="both"){
+dataPreproc<-function(dataDir=getwd(), blocks=12, spot="aushon", exportNo=3, correct="both"){
                    
   ################################################################################
   # 1. Import and convert raw data from ".gpr"-files, slide- & sampledescription #
