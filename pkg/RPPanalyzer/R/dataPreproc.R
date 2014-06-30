@@ -1,11 +1,11 @@
-dataPreproc<-function(dataDir=getwd(), blocks=12, spot="aushon", exportNo=3, correct="both"){
+dataPreproc<-function(dataDir=getwd(), blocks=12, spot="aushon", exportNo=3, correct="both", remove_flagged=NULL){
                    
   ################################################################################
   # 1. Import and convert raw data from ".gpr"-files, slide- & sampledescription #
   ################################################################################
   
   setwd(dataDir) 
-  rawdat<-read.Data(blocksperarray=blocks, spotter=spot) # list of length 4, see read.Data()
+  rawdat<-read.Data(blocksperarray=blocks, spotter=spot, remove_flagged=remove_flagged) # list of length 4, see read.Data()
   
   # create an analysis folder labeled by the date of analysis
   DIR <- paste("analysis",sub(" .*$","",Sys.time()),sep="_")
