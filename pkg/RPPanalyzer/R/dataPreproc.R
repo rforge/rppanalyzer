@@ -51,8 +51,11 @@ dataPreproc<-function(dataDir=getwd(), blocks=12, spot="aushon", exportNo=3, cor
                                 exportNo=exportNo)
     
     # correct data values for negative ones
-    if(min(normdatFC[,colnames(arrayDesc)])<0){
-      normdatFC[,colnames(arrayDesc)]<-normdatFC[,colnames(arrayDesc)]+abs(min(normdatFC[,colnames(arrayDesc)]))+1
+    for(A1 in colnames(arrayDesc))   
+    { ind = arrayDesc["array.id",which(colnames(arrayDesc) ==A1)]
+      if (min(normdatFC[, ind]) < 0){
+        normdatFC[, ind] <- normdatFC[, ind] + abs(min(normdatFC[, ind])) +1
+      }
     }
     
     # get FCF columns
