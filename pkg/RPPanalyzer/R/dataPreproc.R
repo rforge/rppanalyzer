@@ -46,18 +46,28 @@ dataPreproc<-function(dataDir=getwd(), blocks=12, spot="aushon", exportNo=3, cor
     # split raw data (fgRaw) into dilution data (dilData) and measurement data to be normalized
     dilData <- fgRaw[which(fgRaw$sample_type=="control" & !is.na(fgRaw$dilSeriesID)),]
     
+    # warning in case of exportNo = 4 and only one dilseriesID value
+    if(length(unique(dilData$dilSeriesID))==1 & exportNo == 4)
+    {cat("warning: exportNo has to be reduced or different dilseriesID flags have to be used.")}
+    
     # adapt signal intensities via subtraction of dilution intercept at concentration 0
     normdatFC<-correctDilinterc(dilseries=dilData, arraydesc=arrayDesc, timeseries=fgRaw[which(fgRaw$sample_type=="measurement"),], 
                                 exportNo=exportNo)
     
     # correct data values for negative ones
-    for(A1 in colnames(arrayDesc))   
+    filedata = c()
+    for(A1 in colnames(arrayDesc))  
     { ind = arrayDesc["array.id",which(colnames(arrayDesc) ==A1)]
-      if (min(normdatFC[, ind]) < 0){
+      if (min(normdatFC[, ind]) < 0) 
+      { filedata = rbind(filedata, c(A1, arrayDesc["target",A1], abs(min(normdatFC[, ind]))) )
         normdatFC[, ind] <- normdatFC[, ind] + abs(min(normdatFC[, ind])) +1
-      }
+        colnames(filedata) = c("array ID", "target", "(slide+pad)-specific abs(min)")}
     }
-    
+    if(!is.null(filedata))
+    {write.table(filedata, file = "negval_correction.txt", sep = "\t", row.names = F)
+    }else{
+    cat("no negative value correction was necessary\n")}
+        
     # get FCF columns
     fcfCol<-colnames(arrayDesc)[grep("protein",arrayDesc["target",])]
     
