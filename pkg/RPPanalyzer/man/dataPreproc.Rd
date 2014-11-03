@@ -10,7 +10,8 @@ Additionally plots for quality checks are generated including dilutions and BLAN
 
 }
 \usage{
-  dataPreproc(dataDir=getwd(), blocks=12, spot="aushon", exportNo=3, correct="both", remove_flagged=NULL)
+  dataPreproc(dataDir=getwd(), blocks=12, spot="aushon",
+  exportNo=3, correct="both", remove_flagged=NULL)
 }
 
 \arguments{
