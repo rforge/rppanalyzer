@@ -4,7 +4,7 @@ Title: Reads, Annotates, and Normalizes Reverse Phase Protein Array Data
 Version: 1.4.1
 Date: 2011-08-02
 Author: Heiko Mannsperger with contributions of Stephan Gade
-Maintainer: Astrid Wachter <Astrid.Wachter@med.uni-goettingen.de>
+Maintainer: Christian Bender <benderpkg@gmail.com>
 Depends: R (>= 2.14)
 Imports: quantreg, limma, lattice, stats4, gam, gplots, grid, ggplot2, Hmisc, Biobase
 ZipData: no
