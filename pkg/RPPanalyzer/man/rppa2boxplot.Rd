@@ -20,6 +20,7 @@ rppa2boxplot(x, param, control=NULL, orderGrp=NULL, file = "boxplot_groups.pdf")
 }
 \author{Silvia von der Heyde, Heiko Mannsperger}
 \examples{
+\dontrun{
 library(RPPanalyzer)
 	
 data(dataIII)
@@ -28,6 +29,7 @@ rppa2boxplot(x=dataIII_median, param="rank", control="vx",
 	orderGrp=c("vx","zx","yzr","rxi"), file="wilcoxonBoxplot.pdf")
 rppa2boxplot(x=dataIII_median, param="rank", control=NULL,
 	orderGrp=c("vx","zx","yzr","rxi"), file="kruskalBoxplot.pdf")
+}
 }
 
 \keyword{ hplot }

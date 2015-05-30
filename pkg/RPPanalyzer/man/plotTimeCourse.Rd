@@ -56,6 +56,7 @@ plotTimeCourse(x, tc.identifier =
  generates a PDF file}
 \author{Heiko Mannsperger <h.mannsperger@dkfz.de }
 \examples{
+\dontrun{
 	library(RPPanalyzer)
 	data(dataII)
 	plotTimeCourse(dataII,
@@ -76,7 +77,8 @@ plotTimeCourse(x, tc.identifier =
     plotTimeCourse(dataII,
 		tc.identifier=c("sample","stimulation","stim_concentration","inhibition")
         ,plot.split="experiment",plotformat="spline_noconf")
-              
+               
+}
 }
 
 \keyword{hplot }

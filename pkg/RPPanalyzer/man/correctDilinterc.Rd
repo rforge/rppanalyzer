@@ -37,6 +37,7 @@ matrix with adapted signal intensities via subtraction of dilution intercept at 
 Daniel Kaschek, Silvia von der Heyde
 }
 \examples{
+\dontrun{
 library(RPPanalyzer)
 # read data
 dataDir <- system.file("extdata", package="RPPanalyzer")
@@ -45,18 +46,19 @@ rawdata <- read.Data(blocksperarray=12, spotter="aushon", printFlags=FALSE)
 # write data
 write.Data(rawdata,FileNameExtension="test_data")
 # import raw data
-fgRaw.tmp <- read.delim("test_dataexpression.txt",
+fgRaw.tmp <- read.delim("test_dataexpression.txt",\cr
 stringsAsFactors=FALSE, row.names=NULL, header=TRUE)
-fgRaw <- read.delim("test_dataexpression.txt", skip=max(which(fgRaw.tmp[,1]==""))+1,
+fgRaw <- read.delim("test_dataexpression.txt", skip=max(which(fgRaw.tmp[,1]==""))+1,\cr
 stringsAsFactors=FALSE, row.names=NULL, header=TRUE)
 # remove NAs
 fgNAVec <- which(is.na(fgRaw[,"ID"]))
 if(length(fgNAVec) > 0){
 fgRaw <- fgRaw[-fgNAVec,]
 }
-colnames(fgRaw) <- sub("X","", gsub("\\\\.","-", colnames(fgRaw)))
+colnames(fgRaw) <- sub("X","", gsub("\\.","-", colnames(fgRaw)))
 # correct data for BG noise
-correctedData <- correctDilinterc(dilseries=fgRaw[which(fgRaw$sample_type=="control" &
-!is.na(fgRaw$dilSeriesID)),], arraydesc=rawdata$arraydescription,
+correctedData <- correctDilinterc(dilseries=fgRaw[which(fgRaw$sample_type=="control" &\cr
+!is.na(fgRaw$dilSeriesID)),], arraydesc=rawdata$arraydescription,\cr
 timeseries=fgRaw[which(fgRaw$sample_type=="measurement"),], exportNo=2)
+}
 }

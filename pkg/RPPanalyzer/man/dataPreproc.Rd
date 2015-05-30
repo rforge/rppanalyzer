@@ -42,7 +42,7 @@ Finally, three pdf files for quality checking are returned.
 \author{
  Silvia von der Heyde
 }
-\examples{
+\examples{\dontrun{
 library(RPPanalyzer)
   
 # get output list 
@@ -58,4 +58,5 @@ cordat<-res$cordat
 normdat<-res$normdat
 # output directory
 DIR<-res$DIR
+}
 }

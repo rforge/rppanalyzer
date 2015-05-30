@@ -19,7 +19,7 @@ Function to logarithmize (log2) the first two RPPA list elements, i.e. foregroun
 \author{
  Silvia von der Heyde
 }
-\examples{
+\examples{\dontrun{
 library(RPPanalyzer)
   
 # input data
@@ -29,4 +29,5 @@ x.norm<-x$normdat
 
 # get log2 list 
 x.log<-logList(x.norm)
+}
 }

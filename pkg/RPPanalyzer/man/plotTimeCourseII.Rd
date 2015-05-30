@@ -114,13 +114,14 @@
     Johannes Bues (j.bues@dkfz-heidelberg.de)
 }
 \examples{
+\dontrun{
 # pre-process the data
 dataDir <- system.file("extdata", package="RPPanalyzer")
 res <- dataPreproc(dataDir=dataDir, blocks=12, spot="aushon", exportNo=2)
 # remove arrays
 normdat_rm <- remove.arrays(res$normdat, param="target", arrays2rm=c("protein","blank"))
 # select samples and export data
-sel_sampels_A549 <- select.sample.group(normdat_rm, params=list("cell_line"="A549"), combine=FALSE)
+sel_sampels_A549 <- select.sample.group(normdat_rm, params=list("cell_line"="A549"), combine=F)
 write.Data(sel_sampels_A549, FileNameExtension="HGF_sample_data_A549")
 # read selected data
 dataexpression_1 <- read.table("HGF_sample_data_A549expression.txt")
@@ -128,11 +129,12 @@ dataexpression_1 <- read.table("HGF_sample_data_A549expression.txt")
 dataexpression_2 <- getErrorModel(dataexpression_1, verbose=FALSE)
 # use averageData function
 dataexpression_3 <- 
-averageData(dataexpression_2, scaling=c("slide","replicate"),
+averageData(dataexpression_2, scaling=c("slide","replicate"),\cr
 distinguish=c("cell_line","treatment"))
 # plot time course data
-plotTimeCourseII(dataexpression_3,
-filename="timecourse_HGF_sample_data_A549.pdf", legpos="top", xname="time [min]",
+plotTimeCourseII(dataexpression_3,\cr
+filename="timecourse_HGF_sample_data_A549.pdf", legpos="top", xname="time [min]",\cr
 yname="signal [a.u.]", linecolor=c("red","green","blue","black","orange","grey"))
+}
 }
 \keyword{file}
