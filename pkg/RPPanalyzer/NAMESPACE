@@ -1,4 +1,8 @@
-import(quantreg,limma,lattice,stats4,gam,gplots,grid,ggplot2)
+import(quantreg,limma,lattice,stats4,gam,gplots,ggplot2,Biobase)
+importFrom( grid, grid.newpage )
+importFrom( grid, pushViewport )
+importFrom( grid, viewport )
+importFrom( grid, grid.layout )
 importFrom( Hmisc, errbar )
 importFrom( Biobase, AnnotatedDataFrame )
 
