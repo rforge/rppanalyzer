@@ -6,7 +6,7 @@
 \usepackage{amssymb}
 \usepackage{setspace}
 \usepackage{booktabs}
-\usepackage{multirow}
+%\usepackage{multirow}
 \usepackage{Sweave}
 \usepackage[authoryear,round]{natbib}
 \usepackage{times}
