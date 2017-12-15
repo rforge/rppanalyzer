@@ -38,6 +38,9 @@ Daniel Kaschek, Silvia von der Heyde
 }
 \examples{
 library(RPPanalyzer)
+
+origDir <- getwd()
+
 # read data
 dataDir <- system.file("extdata", package="RPPanalyzer")
 setwd(dataDir)
@@ -59,4 +62,7 @@ colnames(fgRaw) <- sub("X","", gsub("\\\.","-", colnames(fgRaw)))
 correctedData <- correctDilinterc(dilseries=fgRaw[which(fgRaw$sample_type=="control" &
 !is.na(fgRaw$dilSeriesID)),], arraydesc=rawdata$arraydescription,
 timeseries=fgRaw[which(fgRaw$sample_type=="measurement"),], exportNo=2)
+
+setwd(origDir)
+
 }

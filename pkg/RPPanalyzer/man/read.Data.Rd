@@ -66,6 +66,8 @@
 \examples{
   library(RPPanalyzer)
   
+  origDir <- getwd()
+  
   dataDir <- system.file("extdata", package="RPPanalyzer")
   setwd(dataDir)
   rawdata <- read.Data(blocksperarray=12, spotter="aushon", printFlags=FALSE, remove_flagged=NULL)
@@ -73,6 +75,8 @@
   
   rawdata <- read.Data(blocksperarray=12, spotter="aushon", printFlags=FALSE, remove_flagged=50)
   print(dim(rawdata$expression))
+  
+  setwd(origDir)
   }
 \keyword{ manip }
 

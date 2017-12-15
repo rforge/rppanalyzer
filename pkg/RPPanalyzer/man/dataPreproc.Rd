@@ -44,7 +44,9 @@ Finally, three pdf files for quality checking are returned.
 }
 \examples{
 library(RPPanalyzer)
-  
+
+origDir <- getwd()  
+
 # get output list 
 dataDir<-system.file("extdata",package="RPPanalyzer")
 res<-dataPreproc(dataDir=dataDir,blocks=12,spot="aushon",exportNo=4,correct="both")
@@ -58,4 +60,6 @@ cordat<-res$cordat
 normdat<-res$normdat
 # output directory
 DIR<-res$DIR
+
+setwd(origDir)
 }
