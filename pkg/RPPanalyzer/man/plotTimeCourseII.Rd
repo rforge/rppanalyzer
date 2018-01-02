@@ -114,7 +114,7 @@
     Johannes Bues (j.bues@dkfz-heidelberg.de)
 }
 \examples{
-origDir <- getwd()
+\dontrun{
 
 # pre-process the data
 dataDir <- system.file("extdata", package="RPPanalyzer")
@@ -136,6 +136,6 @@ plotTimeCourseII(dataexpression_3, filename="timecourse_HGF_sample_data_A549.pdf
 legpos="top", xname="time [min]",
 yname="signal [a.u.]", linecolor=c("red","green","blue","black","orange","grey"))
 
-setwd(origDir)
+}
 }
 \keyword{file}

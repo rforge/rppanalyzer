@@ -43,9 +43,9 @@ Finally, three pdf files for quality checking are returned.
  Silvia von der Heyde
 }
 \examples{
+\dontrun{
 library(RPPanalyzer)
 
-origDir <- getwd()  
 
 # get output list 
 dataDir<-system.file("extdata",package="RPPanalyzer")
@@ -61,5 +61,5 @@ normdat<-res$normdat
 # output directory
 DIR<-res$DIR
 
-setwd(origDir)
+}
 }

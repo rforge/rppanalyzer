@@ -37,9 +37,9 @@ matrix with adapted signal intensities via subtraction of dilution intercept at 
 Daniel Kaschek, Silvia von der Heyde
 }
 \examples{
+\dontrun{
 library(RPPanalyzer)
 
-origDir <- getwd()
 
 # read data
 dataDir <- system.file("extdata", package="RPPanalyzer")
@@ -63,6 +63,6 @@ correctedData <- correctDilinterc(dilseries=fgRaw[which(fgRaw$sample_type=="cont
 !is.na(fgRaw$dilSeriesID)),], arraydesc=rawdata$arraydescription,
 timeseries=fgRaw[which(fgRaw$sample_type=="measurement"),], exportNo=2)
 
-setwd(origDir)
+}
 
 }
