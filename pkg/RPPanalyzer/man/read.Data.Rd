@@ -75,8 +75,8 @@
   
   rawdata <- read.Data(blocksperarray=12, spotter="aushon", printFlags=FALSE, remove_flagged=50)
   print(dim(rawdata$expression))
+  }
   
-}
   }
 \keyword{ manip }
 

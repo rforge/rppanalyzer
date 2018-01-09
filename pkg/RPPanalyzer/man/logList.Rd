@@ -24,6 +24,7 @@ Function to logarithmize (log2) the first two RPPA list elements, i.e. foregroun
 library(RPPanalyzer)
 
   
+  
 # input data
 dataDir<-system.file("extdata",package="RPPanalyzer")
 x<-dataPreproc(dataDir=dataDir, blocks=12, spot="aushon", exportNo=4)
@@ -31,5 +32,6 @@ x.norm<-x$normdat
 
 # get log2 list 
 x.log<-logList(x.norm)
+
 }
 }
